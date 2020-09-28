@@ -7,12 +7,20 @@
 var app = require('../app');
 var debug = require('debug')('cvexpress:server');
 var http = require('http');
+var dotenv = require("dotenv");
+var mongoose = require("mongoose");
+
+/**
+ * Setup config.
+ */
+
+dotenv.config();
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.CV_EXPRESS_PORT || '9000');
 app.set('port', port);
 
 /**
@@ -22,12 +30,27 @@ app.set('port', port);
 var server = http.createServer(app);
 
 /**
- * Listen on provided port, on all network interfaces.
+ * Database setup
  */
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+mongoose.connect(process.env.MONGO_DB, {
+  poolSize: 10,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+const connection = mongoose.connection;
+connection.on("error", console.error.bind(console, "MongoDB connection error:"));
+connection.once("open", function () {
+  console.log("MongoDB connection established");
+
+  /**
+   * Listen on provided port, on all network interfaces.
+   */
+
+  server.listen(port);
+  server.on('error', onError);
+  server.on('listening', onListening);
+});
 
 /**
  * Normalize a port into a number, string, or false.
