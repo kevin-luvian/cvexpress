@@ -9,10 +9,7 @@ const storage = new GridFsStorage({
     file: (req, file) => {
         return {
             bucketName: "upload",
-            filename: `${Date.now()}-file-${file.originalname}`,
-            metadata: {
-                originalname: file.originalname
-            }
+            filename: file.originalname
         };
     }
 });
