@@ -1,0 +1,75 @@
+@import "../../style/theme.scss";
+@import "../../style/variables.scss";
+@import "../../style/responsive.scss";
+
+.root {
+  display: block;
+  text-align: center;
+  padding: 1.5rem 2rem;
+  border: $basic-border;
+  border-width: 0.15rem;
+  border-radius: 1rem;
+  transition: $fast-transition;
+  @include media(notPhone) {
+    padding: 1.5rem 1rem;
+  }
+  @include media(extra) {
+    padding: 1.5rem 0.5rem;
+  }
+  &:hover {
+    transform: translateY(-0.5rem);
+    box-shadow: 0 12px 17px rgba(0, 0, 0, 0.12);
+  }
+  i {
+    margin: 0.2rem 0;
+    font-size: 2.5rem;
+    @include themify($themes) {
+      color: themed("rootColor");
+    }
+  }
+  h1 {
+    margin: 0;
+    margin: 1rem 0 0.9rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    @include themify($themes) {
+      color: themed("textColorBold");
+    }
+  }
+  h2 {
+    margin: 0;
+    font-size: 3rem;
+    @include themify($themes) {
+      color: themed("muteColor");
+    }
+  }
+}
+
+.action {
+  display: block;
+  margin-bottom: 0.5rem;
+  @include themify($themes) {
+    color: themed("textColorBold");
+  }
+  & > svg {
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: $fast-transition;
+    &:first-child {
+      margin-right: 0.3rem;
+      &:hover {
+        @include themify($themes) {
+          color: themed("buttonColor");
+        }
+      }
+    }
+    &:last-child {
+      margin-left: 0.3rem;
+      &:hover {
+        @include themify($themes) {
+          color: themed("buttonDanger");
+        }
+      }
+    }
+  }
+}

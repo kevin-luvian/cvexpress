@@ -1,0 +1,48 @@
+@import "../../../style/theme.scss";
+@import "../../../style/variables.scss";
+@import "../../../style/responsive.scss";
+
+.root {
+  padding: 0 2rem !important;
+  margin-top: 2rem;
+  @include media(desktop) {
+    margin-top: 0;
+    padding: 0 !important;
+  }
+}
+
+.gap {
+  padding-top: 5rem;
+  @include media(desktop) {
+    padding-top: 2rem;
+  }
+}
+
+$size: 150px;
+.loader {
+  & > div {
+    position: absolute;
+    width: $size;
+    height: $size;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    div {
+      width: $size;
+      height: $size;
+      @include themify($themes) {
+        border-color: themed("rootColor");
+      }
+    }
+  }
+}
+
+$calcMobile: calc(100vh - (57.59px + 68px));
+$calcDesktop: calc(100vh - (93px + 68px + 3.5rem));
+.fill {
+  position: relative !important;
+  height: $calcMobile !important;
+  @include media(desktop) {
+    height: $calcDesktop !important;
+  }
+}

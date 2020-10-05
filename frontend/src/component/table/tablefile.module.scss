@@ -1,0 +1,33 @@
+@import "../../style/theme.scss";
+@import "../../style/responsive.scss";
+@import "../../style/variables.scss";
+
+.searchbar {
+  display: flex;
+  margin: 1.5rem 0;
+  height: 50px;
+  border: $basic-border;
+  box-shadow: none !important;
+  @include media(desktop) {
+    margin-left: auto;
+    max-width: 50%;
+  }
+}
+
+.divider {
+  margin: auto 0 !important;
+}
+
+.input {
+  width: 100%;
+  margin-left: 0.5rem;
+}
+
+.searchIcon {
+  margin: auto 0;
+  padding: 0 12px;
+  color: rgba(0, 0, 0, 0.54);
+  &:hover {
+    cursor: text;
+  }
+}

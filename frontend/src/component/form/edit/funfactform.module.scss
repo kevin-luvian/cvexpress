@@ -1,0 +1,30 @@
+@import "../../../style/theme.scss";
+@import "../../../style/variables.scss";
+@import "../../../style/responsive.scss";
+@import "../../../style/theme.scss";
+@import "../../../style/variables.scss";
+@import "../../../style/responsive.scss";
+
+@include media(notPhone) {
+  .icon {
+    width: 30.5% !important;
+  }
+
+  .title {
+    width: 30.5% !important;
+    margin: 0 3.5% !important;
+  }
+
+  .number {
+    width: 30.5%;
+  }
+}
+
+.help {
+  cursor: pointer;
+  &:hover {
+    @include themify($themes) {
+      color: themed("textColorBold");
+    }
+  }
+}

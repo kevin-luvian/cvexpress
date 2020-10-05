@@ -1,0 +1,38 @@
+@import "../../style/theme.scss";
+@import "../../style/variables.scss";
+@import "../../style/responsive.scss";
+
+.elements {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+  @include media(phone) {
+    display: block;
+  }
+  & > div {
+    margin-bottom: 1rem;
+    @include media(tablet) {
+      width: 48%;
+      margin-right: 4%;
+      &:nth-child(even) {
+        margin-right: 0;
+      }
+    }
+    @include media(desktop) {
+      width: 31%;
+      margin-right: 3.5%;
+      &:nth-child(3n) {
+        margin-right: 0;
+      }
+    }
+    @include media(extra) {
+      width: 22%;
+      &:nth-child(n) {
+        margin-right: 4%;
+      }
+      &:nth-child(4n) {
+        margin-right: 0;
+      }
+    }
+  }
+}

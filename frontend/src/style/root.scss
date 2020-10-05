@@ -1,0 +1,39 @@
+@import "./responsive.scss";
+
+*,
+*::before,
+*::after {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  overflow-x: hidden;
+  @include media(desktop) {
+    overflow: auto;
+  }
+}
+
+#notification-box {
+  z-index: 200;
+  position: fixed;
+  width: fit-content;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  @include media(desktop) {
+    left: 5%;
+    bottom: 1rem;
+    transform: translateX(0);
+  }
+}
+
+button:focus {
+  outline: none !important;
+}
+
+.MuiDialog-paper {
+  margin: 0 !important;
+  max-width: none !important;
+}

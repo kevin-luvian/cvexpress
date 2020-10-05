@@ -1,0 +1,50 @@
+@import "../../style/theme.scss";
+@import "../../style/responsive.scss";
+
+.root {
+  font-family: "Poppins", Helvetica, sans-serif;
+  min-height: 100vh;
+  width: 100%;
+  position: absolute;
+  @include themify($themes) {
+    background-color: themed("rootColor");
+  }
+}
+
+.container {
+  min-height: 100vh;
+  @include themify($themes) {
+    background-color: themed("containerColor");
+  }
+  @include media(desktop) {
+    margin: 1.5rem;
+    min-height: auto;
+    border-radius: 2rem;
+  }
+}
+
+.containerContent {
+  padding-top: 57.5px;
+  @include media(desktop) {
+    padding-top: 0;
+  }
+}
+
+.footer {
+  padding: 1rem 0;
+}
+
+.divider {
+  width: 100% !important;
+  margin-bottom: 1rem !important;
+}
+
+.copyright {
+  text-align: right;
+  margin-bottom: 0;
+  margin-right: 2.5rem;
+  font-size: 0.8rem;
+  @include themify($themes) {
+    color: themed("textColorMute");
+  }
+}

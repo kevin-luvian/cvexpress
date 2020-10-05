@@ -1,0 +1,49 @@
+$themes: (
+  forest: (
+    rootColor: #007ced,
+    containerColor: #ffffff,
+    muteColor: #d5d5d5,
+    buttonColor: #07529c,
+    buttonHover: darken(#07529c, 7%),
+    buttonDanger: crimson,
+    buttonHoverDanger: darken(crimson, 7%),
+    buttonText: #edf5e1,
+    buttonColorMute: #a5a5a5,
+    buttonHoverMute: darken(#a5a5a5, 20%),
+    buttonTextMute: #edf5e1,
+    textColorBold: #333333,
+    textColorMute: #a5a5a5,
+    textColor: #666666,
+  ),
+  calm: (
+    primary: #3d5a80,
+    secondary: #98c1d9,
+    accent: #e0fbfc,
+    accent-2: #ee6c4d,
+    accent-3: #293241,
+  ),
+);
+
+@mixin themify($themes: $themes) {
+  @each $theme, $map in $themes {
+    :global(.theme#{$theme}) & {
+      $theme-map: () !global;
+      @each $key, $submap in $map {
+        $value: map-get(map-get($themes, $theme), "#{$key}");
+        $theme-map: map-merge(
+          $theme-map,
+          (
+            $key: $value,
+          )
+        ) !global;
+      }
+
+      @content;
+      $theme-map: null !global;
+    }
+  }
+}
+
+@function themed($key) {
+  @return map-get($theme-map, $key);
+}

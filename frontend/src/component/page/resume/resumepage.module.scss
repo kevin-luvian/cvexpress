@@ -1,0 +1,89 @@
+@import "../../../style/theme.scss";
+@import "../../../style/variables.scss";
+@import "../../../style/responsive.scss";
+
+$border: 2px solid rgba(0, 0, 0, 0.125);
+
+.root {
+  display: block;
+  padding-bottom: 3rem;
+}
+
+.pageHeader {
+  padding: 2.5rem 2rem;
+  border-top: $border;
+  border-bottom: $border;
+  background-color: #fcfcfc;
+  @include media(desktop) {
+    padding-left: 8%;
+    padding-right: 8%;
+  }
+  h1 {
+    margin: 0;
+    font-weight: bold;
+    @include themify($themes) {
+      color: themed("textColorBold");
+    }
+  }
+  p {
+    font-size: 1rem;
+    margin-bottom: 0;
+    margin-left: auto;
+    @include themify($themes) {
+      color: themed("textColorMute");
+    }
+  }
+}
+
+.contents {
+  & > div {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    @include media(desktop) {
+      padding-left: 8%;
+      padding-right: 8%;
+    }
+  }
+}
+
+.eduExpContainer {
+  display: flex;
+  flex-wrap: wrap;
+  & > div {
+    @include media(notPhone) {
+      width: 48%;
+      &:first-child {
+        margin-right: 4%;
+      }
+    }
+  }
+}
+
+$size: 150px;
+.loader {
+  & > div {
+    position: absolute;
+    width: $size;
+    height: $size;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    div {
+      width: $size;
+      height: $size;
+      @include themify($themes) {
+        border-color: themed("rootColor");
+      }
+    }
+  }
+}
+
+$calcMobile: calc(100vh - (57.59px + 68px));
+$calcDesktop: calc(100vh - (93px + 68px + 3.5rem));
+.fill {
+  position: relative !important;
+  height: $calcMobile !important;
+  @include media(desktop) {
+    height: $calcDesktop !important;
+  }
+}

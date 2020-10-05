@@ -1,0 +1,29 @@
+version: '3'
+
+volumes:
+  mongodb:
+  
+services:
+    app:
+        container_name: express_app
+        restart: unless-stopped
+        build: wkeplon/cvexpress_app:dev
+        environment:
+            - MONGO_DB=mongodb://mongodb:27017/express
+            - NODE_ENV=development
+            - USERNAME_APP=admin
+            - PASSWORD_APP=password
+            - JWT_TOKEN_SECRET=itisasecretorisit
+            - SALT_ROUNDS=10
+        ports:
+            - '7001:9000'
+        depends_on:
+            - db
+    db:
+        container_name: mongodb
+        restart: unless-stopped
+        image: mongo:4.4
+        volumes: 
+            - mongodb:/data/db
+        ports:
+            - '27017:27017'

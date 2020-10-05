@@ -1,0 +1,12 @@
+@import "../../../style/responsive.scss";
+
+.root {
+  margin-top: 2rem;
+  @include media(desktop) {
+    margin-top: 0;
+  }
+}
+
+.table {
+  margin: 1.5rem 3rem;
+}

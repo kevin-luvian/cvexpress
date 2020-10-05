@@ -1,0 +1,122 @@
+@import "../../style/theme.scss";
+@import "../../style/variables.scss";
+@import "../../style/responsive.scss";
+
+.root {
+  display: block;
+  padding-top: 20px;
+  @include themify($themes) {
+    color: themed("textColor");
+  }
+  @include media(desktop) {
+    display: flex;
+    flex-grow: 0; /* do not grow   - initial value: 0 */
+    flex-shrink: 0;
+  }
+}
+
+.imageContainer {
+  display: block;
+}
+
+.image {
+  display: block;
+  position: relative;
+  margin: auto;
+  width: 17rem;
+  height: 17rem;
+  background-color: #fff;
+  border-radius: 1000px;
+  border: 18px solid #fff;
+  overflow: hidden;
+  box-shadow: $super-smooth-shadow;
+  @include media(tablet) {
+    width: 45vw;
+    height: 45vw;
+  }
+  @include media(desktop) {
+    width: 30vw;
+    height: 30vw;
+    margin-right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  @include media(extra) {
+    width: 25vw;
+    height: 25vw;
+    margin: 0 4rem;
+  }
+  .inner {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 50% 50%;
+    height: auto;
+    display: block;
+    position: absolute;
+    top: -18px;
+    bottom: -18px;
+    width: auto;
+    left: -18px;
+    right: -18px;
+  }
+}
+
+.description {
+  display: block;
+  height: fit-content;
+  border: 0.1rem solid white;
+  margin-top: 2.5rem;
+  text-align: center;
+  @include media(desktop) {
+    margin-top: 0;
+    text-align: left;
+    padding-left: 2rem;
+    width: auto;
+  }
+  h1 {
+    margin-bottom: 0.8rem;
+    font-weight: bold;
+    @include themify($themes) {
+      color: themed("textColorBold");
+    }
+  }
+  p {
+    text-align: left;
+    margin: 0;
+  }
+}
+
+.action {
+  margin-top: 1.5rem;
+}
+
+.button {
+  font-size: 0.9rem;
+  padding: 0.6rem 2rem;
+  border: 0.1rem solid;
+  border-radius: 1.5rem;
+  background-color: transparent;
+  transition: $basic-transition;
+  box-shadow: $tight-smooth-shadow;
+  &:first-child {
+    margin-right: 0.5rem;
+    @include themify($themes) {
+      border-color: themed("rootColor");
+      color: themed("textColorBold");
+      &:hover {
+        background-color: themed("rootColor");
+        color: themed("buttonText");
+      }
+    }
+  }
+  &:last-child {
+    @include themify($themes) {
+      border-color: themed("textColorMute");
+      color: themed("textColor");
+      &:hover {
+        background-color: themed("textColorMute");
+        color: themed("textColorBold");
+      }
+    }
+  }
+}

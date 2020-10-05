@@ -1,0 +1,74 @@
+@import "../../style/theme.scss";
+@import "../../style/variables.scss";
+@import "../../style/responsive.scss";
+
+.root {
+  display: block;
+  width: 100%;
+  margin-top: 1.2rem;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 2px;
+  h1 {
+    font-size: 16px;
+    line-height: 16px;
+    font-weight: bold;
+    margin-bottom: 2px;
+    @include themify($themes) {
+      color: themed("textColorBold");
+    }
+  }
+  p {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 0;
+    @include themify($themes) {
+      color: themed("textColorMute");
+    }
+  }
+}
+
+.action {
+  margin-left: 0.5rem;
+  height: fit-content;
+  & > svg {
+    cursor: pointer;
+    margin-left: 0.3rem;
+    vertical-align: top;
+    font-size: 16px;
+    line-height: 16px;
+    transition: $fast-transition;
+    &:first-child {
+      &:hover {
+        @include themify($themes) {
+          color: themed("buttonColor");
+        }
+      }
+    }
+    &:last-child {
+      &:hover {
+        @include themify($themes) {
+          color: themed("buttonDanger");
+        }
+      }
+    }
+  }
+}
+
+.percentage {
+  padding: 3px;
+  border: $basic-border;
+  border-width: 2px;
+  border-radius: 1rem;
+  & > div {
+    height: 5px;
+    border-radius: 1rem;
+    @include themify($themes) {
+      background-color: themed("rootColor");
+    }
+  }
+}

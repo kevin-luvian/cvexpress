@@ -1,0 +1,56 @@
+@import "../../style/theme.scss";
+@import "../../style/responsive.scss";
+@import "../../style/variables.scss";
+
+.root {
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.form {
+  box-shadow: none !important;
+  //border: 2px solid #cecece;
+  border: $basic-border;
+}
+
+.input {
+  margin-left: 10px;
+  flex: auto;
+}
+
+.inputField {
+  cursor: context-menu;
+}
+
+.divider {
+  height: 28px !important;
+  margin: 5px !important;
+}
+
+.hide {
+  display: none;
+}
+
+.label {
+  margin: auto;
+}
+
+.icon {
+  width: auto;
+}
+
+.uploadButton {
+  max-width: 20px;
+  padding: 5px 0px !important;
+  @include themify($themes) {
+    background-color: themed("buttonColor");
+    color: themed("buttonText");
+  }
+  &:hover {
+    @include themify($themes) {
+      background-color: themed("buttonHover");
+    }
+  }
+}

@@ -1,0 +1,19 @@
+@import "../../../style/theme.scss";
+@import "../../../style/responsive.scss";
+@import "../../../style/variables.scss";
+
+.root {
+  padding: 1.5rem 2rem;
+  width: 95vw;
+  color: #666666;
+  @include media(notPhone) {
+    width: fit-content;
+    max-width: 95vw;
+    min-width: 60vw;
+    padding: 2.5rem 4rem;
+  }
+  h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+}

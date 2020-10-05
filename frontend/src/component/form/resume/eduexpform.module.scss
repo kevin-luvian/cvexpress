@@ -1,0 +1,71 @@
+@import "../../../style/theme.scss";
+@import "../../../style/variables.scss";
+@import "../../../style/responsive.scss";
+
+.container {
+  p {
+    display: inline-flex;
+    width: fit-content;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0 10%;
+    @include themify($themes) {
+      color: themed("textColor");
+    }
+  }
+  .year {
+    width: calc(40% - 6.67px);
+    margin: 0;
+  }
+  @include media(notPhone) {
+    p {
+      margin: 0 2.5%;
+    }
+    .year {
+      width: calc(20% - 6.67px);
+    }
+    .smallDesc {
+      width: 52%;
+      margin-left: 3%;
+    }
+  }
+  @include media(extra) {
+    p {
+      margin: 0 2.5%;
+    }
+    .year {
+      width: calc(12.5% - 6.67px);
+    }
+    .smallDesc {
+      width: 32.5%;
+      margin: 0 2.5% !important;
+    }
+    .title {
+      width: 32.5%;
+    }
+  }
+}
+
+@include media(notPhone) {
+  .year {
+    width: 25%;
+    margin-right: 5%;
+  }
+  .smallDesc {
+    width: 70%;
+  }
+}
+
+@include media(extra) {
+  .year {
+    width: 15%;
+    margin-right: 3%;
+  }
+  .smallDesc {
+    width: 39.5%;
+    margin-right: 3% !important;
+  }
+  .title {
+    width: 39.5%;
+  }
+}

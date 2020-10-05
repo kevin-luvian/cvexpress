@@ -1,0 +1,17 @@
+@import "../../style/theme.scss";
+@import "../../style/variables.scss";
+@import "../../style/responsive.scss";
+
+.element {
+  margin-top: 2rem;
+  @include media(notPhone) {
+    width: 50%;
+    margin-top: 1.5rem;
+    &:nth-child(even) {
+      padding-left: 1rem;
+    }
+    &:nth-child(odd) {
+      padding-right: 1rem;
+    }
+  }
+}

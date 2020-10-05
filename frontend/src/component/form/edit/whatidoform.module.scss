@@ -1,0 +1,27 @@
+@import "../../../style/theme.scss";
+@import "../../../style/variables.scss";
+@import "../../../style/responsive.scss";
+
+@include media(notPhone) {
+  .icon {
+    width: 25% !important;
+  }
+
+  .title {
+    width: 70% !important;
+    float: right;
+  }
+}
+
+.description {
+  white-space: pre-wrap;
+}
+
+.help {
+  cursor: pointer;
+  &:hover {
+    @include themify($themes) {
+      color: themed("textColorBold");
+    }
+  }
+}

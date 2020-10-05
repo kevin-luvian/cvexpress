@@ -1,0 +1,108 @@
+@import "../../../style/theme.scss";
+@import "../../../style/variables.scss";
+@import "../../../style/responsive.scss";
+
+.root {
+  margin-top: 2rem;
+  @include themify($themes) {
+    color: themed("textColor");
+  }
+  @include media(desktop) {
+    margin-top: 0;
+  }
+}
+
+.container {
+  border-radius: 0.4rem;
+  border: $basic-border;
+  box-shadow: $smooth-shadow;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.header {
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.divider {
+  margin: 2rem 0 !important;
+  width: 100% !important;
+}
+
+.inputContainer {
+  @include media(desktop) {
+    padding: 0 1rem;
+  }
+}
+
+.input {
+  width: 100%;
+  margin-bottom: 1.5rem !important;
+}
+
+.button {
+  padding: 0.6rem 0.8rem;
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease-in-out;
+  @include themify($themes) {
+    background-color: themed("buttonColor");
+    color: themed("buttonText");
+    &:hover {
+      box-shadow: $tight-shadow;
+    }
+    &:active {
+      background-color: themed("buttonHover");
+    }
+  }
+  @include media(desktop) {
+    width: 170px;
+  }
+  p {
+    display: inline;
+    margin: 0;
+  }
+  svg {
+    display: inline;
+    text-align: center;
+    margin: auto;
+  }
+}
+
+.elements {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+  @include media(phone) {
+    display: block;
+  }
+  & > div {
+    margin-bottom: 1rem;
+    @include media(tablet) {
+      width: 48%;
+      margin-right: 4%;
+      &:nth-child(even) {
+        margin-right: 0;
+      }
+    }
+    @include media(desktop) {
+      width: 31%;
+      margin-right: 3.5%;
+      &:nth-child(3n) {
+        margin-right: 0;
+      }
+    }
+    @include media(extra) {
+      width: 22%;
+      &:nth-child(n) {
+        margin-right: 4%;
+      }
+      &:nth-child(4n) {
+        margin-right: 0;
+      }
+    }
+  }
+}

@@ -1,0 +1,89 @@
+@import "../../style/theme.scss";
+@import "../../style/responsive.scss";
+@import "../../style/variables.scss";
+
+.container {
+  width: 95vw;
+  padding: 1.5rem 2.5rem;
+  color: #666666;
+  @include media(notPhone) {
+    width: fit-content;
+    min-width: 50vw;
+  }
+}
+
+.title {
+  color: #333333;
+  margin-bottom: 1.3rem;
+}
+
+.message {
+  p {
+    overflow-x: auto;
+    margin: 0;
+  }
+}
+
+.warning {
+  p {
+    margin-top: 0.3rem;
+    margin-bottom: 0;
+    font-size: 0.8rem;
+    color: crimson;
+  }
+}
+
+.action {
+  text-align: right;
+  margin-top: 1.3rem;
+}
+
+.button {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease-in-out;
+  box-shadow: $tight-shadow;
+}
+
+.disagree {
+  margin-right: 1rem;
+  color: white;
+  background-color: crimson;
+  &:hover {
+    background-color: darken(crimson, 10%);
+  }
+}
+
+.agree {
+  color: white;
+  background-color: darkgray;
+  &:hover {
+    background-color: darken(darkgray, 10%);
+  }
+}
+
+@include media(notPhone) {
+  .scrollbar::-webkit-scrollbar {
+    width: 0.8rem;
+  }
+
+  /* Track */
+  .scrollbar::-webkit-scrollbar-track {
+    border-radius: 0.5rem;
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 0.5rem;
+  }
+
+  /* Handle on hover */
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}

@@ -1,0 +1,36 @@
+@import "../../../style/theme.scss";
+@import "../../../style/variables.scss";
+@import "../../../style/responsive.scss";
+
+.root {
+  display: block;
+  margin-top: 2rem;
+  @include media(desktop) {
+    margin-top: 0;
+  }
+}
+
+.container {
+  border-radius: 0.4rem;
+  border: $basic-border;
+  box-shadow: $smooth-shadow;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.header {
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.divider {
+  margin: 2rem 0 !important;
+  width: 100% !important;
+}
+
+.inputContainer {
+  @include media(desktop) {
+    padding: 0 1rem;
+  }
+}

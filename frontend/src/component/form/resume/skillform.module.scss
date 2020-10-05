@@ -1,0 +1,63 @@
+@import "../../../style/theme.scss";
+@import "../../../style/variables.scss";
+@import "../../../style/responsive.scss";
+
+.percentageText {
+  text-align: left;
+  margin-bottom: 0;
+  @include themify($themes) {
+    color: themed("textColor");
+  }
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.categoryInput {
+  @include media(notPhone) {
+    width: 47.5%;
+    margin-right: 5% !important;
+  }
+}
+
+.titleInput {
+  @include media(notPhone) {
+    width: 47.5%;
+  }
+}
+
+.gridSlider {
+  width: 75%;
+  @include media(tablet) {
+    width: 80%;
+  }
+  @include media(desktop) {
+    width: 85%;
+  }
+}
+
+.gridInput {
+  width: 15%;
+  margin-left: 10%;
+  :global(.MuiInput-root) {
+    margin-bottom: 0 !important;
+  }
+  @include media(tablet) {
+    width: 15%;
+    margin-left: 5%;
+  }
+  @include media(desktop) {
+    width: 10%;
+    margin-left: 5%;
+  }
+}
+
+.slider {
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+  @include themify($themes) {
+    color: themed("rootColor");
+  }
+}

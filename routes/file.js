@@ -4,22 +4,22 @@ const grid = require('gridfs-stream');
 const mongoose = require("mongoose");
 const tokenAuth = require("../middleware/tokenauth");
 const upload = require("../middleware/upload");
-
+const FileMetadata = require("../models/FileMetadata")
 
 /* GET all file info. */
 router.get('/', (req, res) => {
-    const db = mongoose.connection.db;
-    const collection = db.collection('upload.files');
-    collection.find({}).toArray((err, data_list) => {
-        if (err) return next({ error: "error finding file" });
-        for (let i = 0; i < data_list.length; i++) {
-            data_list[i].fileurl =
-                `http://${req.get('host')}` +
-                '/api/files' +
-                `/${data_list[i]._id}/` +
-                data_list[i].metadata.originalname;
+    FileMetadata.find().lean().exec((err, obj_arr) => {
+        if (err) {
+            return res.status(400).json({
+                error: process.env.NODE_ENV == "development" ? err : "an error occured"
+            });
         }
-        return res.json({ data: data_list });
+        obj_arr.forEach(obj => {
+            obj["url"] = `http://${req.headers.host}/api/files/` +
+                `${obj._id}/` +
+                obj.originalName.replace(/\s+/g, "%20");
+        });
+        return res.json(obj_arr);
     });
 });
 
@@ -28,15 +28,30 @@ router.post('/', tokenAuth, async (req, res) => {
     try {
         await upload(req, res);
 
-        console.log("Req File::", req.file);
         if (req.file == undefined) {
-            return res.send(`You must select a file.`);
+            return res.status(400).json({ error: "You must select a file" });
         }
 
-        return res.send('File has been uploaded.');
-    } catch (error) {
-        console.log(`Error ${error}`);
-        return res.send(`Error when trying upload image: ${error}`);
+        if (req.group == "") {
+            return res.status(400).json({ error: "You must define a group" });
+        }
+        // Create a Metadata
+        const filemetadata = new FileMetadata({
+            _id: req.file.id,
+            originalName: req.file.originalname,
+            contentType: req.file.contentType,
+            size: req.file.size,
+            group: req.group
+        });
+        filemetadata
+            .save()
+            .then(() => {
+                res.json({ message: 'File has been uploaded' });
+            })
+    } catch (err) {
+        const errMessage = process.env.NODE_ENV == "development" ?
+            err : "saving education failed";
+        return res.status(400).json({ error: `Error when trying upload image: ${errMessage}` });
     }
 })
 
@@ -57,6 +72,36 @@ router.get('/:id/:filename', (req, res) => {
         const gfs = grid(db, mongoose.mongo);
         gfs.collection("upload");
         gfs.createReadStream({ _id: fileID }).pipe(res);
+    })
+});
+
+/* DELETE file by ID */
+router.delete('/:id', (req, res) => {
+    const fileID = mongoose.Types.ObjectId(req.params.id);
+    const db = mongoose.connection.db;
+
+    // find file from id
+    db.collection('upload.chunks').deleteOne({ _id: fileID }, (err) => {
+        // check for error
+        if (err) {
+            console.log("[ error ]", err)
+            return res.status(404).json({ error: "error deleting file data" });
+        }
+        db.collection('upload.files').deleteOne({ _id: fileID }, (err) => {
+            // check for error
+            if (err) {
+                console.log("[ error ]", err)
+                return res.status(404).json({ error: "error deleting file chunks" });
+            }
+            FileMetadata.deleteOne({ _id: fileID }, (err) => {
+                // check for error
+                if (err) {
+                    console.log("[ error ]", err)
+                    return res.status(404).json({ error: "error deleting file chunks" });
+                }
+                res.json({ message: "file has been deleted." })
+            });
+        });
     })
 });
 

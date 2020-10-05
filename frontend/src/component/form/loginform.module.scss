@@ -1,0 +1,83 @@
+@import "../../style/theme.scss";
+@import "../../style/responsive.scss";
+@import "../../style/variables.scss";
+
+.rootContainer {
+  width: 90%;
+  margin: 0 auto;
+  @include media(desktop){
+      width: 50%;
+      margin: 0;
+  }
+}
+
+.margin {
+  margin: 1rem;
+  margin-top: 1.5rem;
+}
+
+:global(.MuiInputBase-root) {
+  @include themify($themes) {
+    color: themed("textColor") !important;
+  }
+}
+
+:global(.MuiInputBase-root.Mui-focused) {
+  @include themify($themes) {
+    color: themed("textColorBold") !important;
+  }
+}
+
+:global(.MuiInputLabel-root.Mui-focused) {
+  @include themify($themes) {
+    color: themed("rootColor") !important;
+  }
+}
+
+:global(.MuiInput-underline) {
+  &::after {
+    @include themify($themes) {
+      border-bottom: 2px solid themed("rootColor") !important;
+    }
+  }
+}
+
+.inputContainer {
+  display: flex;
+  align-items: flex-end;
+  .icon {
+    margin: 0rem;
+    font-size: 2rem;
+    @include themify($themes) {
+      color: themed("rootColor");
+    }
+    path {
+      box-shadow: $tight-shadow;
+    }
+  }
+  .field {
+    margin-left: 0.5rem;
+    width: 100%;
+  }
+}
+
+.submitButton {
+  padding: 0.5rem 0.7rem !important;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  transition: $fast-transition;
+  box-shadow: $tight-shadow;
+  @include themify($themes) {
+    background-color: themed("buttonColor");
+    color: themed("buttonText");
+  }
+  &:hover {
+    @include themify($themes) {
+      background-color: themed("buttonHover");
+    }
+  }
+  p {
+    margin-bottom: 0;
+    margin-right: 0.5rem;
+  }
+}

@@ -6,4 +6,4 @@ const schema = mongoose.Schema({
     percentage: { type: Number }
 });
 
-module.exports = mongoose.model("Experience", schema);
+module.exports = mongoose.model("Skill", schema);

@@ -1,0 +1,73 @@
+@import "../../style/theme.scss";
+@import "../../style/variables.scss";
+@import "../../style/responsive.scss";
+
+.root {
+  display: flex;
+}
+
+.icon {
+  font-size: 2.2rem;
+  padding-right: 1.3rem;
+  @include themify($themes) {
+    color: themed("rootColor");
+  }
+  @include media(notPhone) {
+    padding-right: 1.7rem;
+  }
+  i {
+    width: 35px;
+    display: block;
+  }
+}
+
+.header {
+  display: flex;
+  margin-bottom: 0.3rem;
+  h1 {
+    width: fit-content;
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: auto 0.5rem auto 0;
+    @include themify($themes) {
+      color: themed("textColorBold");
+    }
+  }
+  svg {
+    cursor: pointer;
+    width: 1.2rem;
+    margin-left: 0.3rem;
+    @include themify($themes) {
+      color: themed("textColorBold");
+    }
+  }
+}
+
+.edit {
+  &:hover {
+    @include themify($themes) {
+      color: themed("buttonColor");
+    }
+  }
+}
+
+.delete {
+  &:hover {
+    @include themify($themes) {
+      color: themed("buttonDanger");
+    }
+  }
+}
+
+.content {
+  p {
+    letter-spacing: 0.012rem;
+    font-size: 0.9em;
+    line-height: 1.4rem;
+    margin-bottom: 0;
+    white-space: pre-wrap;
+    @include themify($themes) {
+      color: themed("textColor");
+    }
+  }
+}
