@@ -10,13 +10,13 @@ import axios from "../../axios/Axios";
 
 class WhatIDo extends Component {
   constructor(props) {
-    super(props);
+    super();
     this.state = { modalConfirmOpen: false, modalOpen: false };
     this.notif = React.createRef();
   }
   deleteInfo = () => {
     axios
-      .delete("/api/whatido/" + this.props.data._id)
+      .delete(`/api/quickinfos/${this.props.data._id}`)
       .then(() => {
         this.setState({ modalConfirmOpen: false });
         this.props.reload();

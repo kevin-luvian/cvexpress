@@ -50,6 +50,14 @@
       }
     }
   }
+  .edit svg {
+    @include themify($themes) {
+      color: themed("buttonWarning");
+      :hover {
+        color: themed("buttonHoverWarning");
+      }
+    }
+  }
   .download svg {
     @include themify($themes) {
       color: themed("buttonColor");

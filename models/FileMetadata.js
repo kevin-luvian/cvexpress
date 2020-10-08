@@ -2,8 +2,9 @@ const mongoose = require("mongoose");
 
 const schema = mongoose.Schema({
     group: { type: String },
-    originalName: { type: String },
+    filename: { type: String },
     contentType: { type: String },
+    uploadDate: { type: Date },
     size: { type: Number },
 });
 

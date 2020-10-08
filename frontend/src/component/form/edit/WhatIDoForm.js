@@ -1,13 +1,7 @@
 import React, { Component } from "react";
-import Tooltip from "@material-ui/core/Tooltip";
 import NotificationService from "../../standalone/NotificationService";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
-import HelpOutline from "@material-ui/icons/HelpOutline";
-import ArrowIcon from "@material-ui/icons/ArrowRight";
+import { Input, Tooltip, InputLabel, InputAdornment, FormControl, TextField } from "@material-ui/core";
+import { HelpOutline, ArrowRight } from "@material-ui/icons";
 import IconModal from "../../modal/Icons";
 import stylesPrimary from "./whatidoform.module.scss";
 import styles from "./editform.module.scss";
@@ -27,12 +21,13 @@ class WhatIDoForm extends Component {
   putInfo = () => {
     const data = {
       _id: this.props._id,
+      type: "whatido",
       icon: this.state.icon,
       title: this.state.title,
       description: this.state.description,
     };
     axios
-      .put("/api/whatido", data)
+      .put(`/api/quickinfos/${data._id}`, data)
       .then(() => {
         this.props.reload();
       })
@@ -49,11 +44,12 @@ class WhatIDoForm extends Component {
   postInfo = () => {
     const data = {
       icon: this.state.icon,
+      type: "whatido",
       title: this.state.title,
       description: this.state.description,
     };
     axios
-      .post("/api/whatido", data)
+      .post("/api/quickinfos", data)
       .then(() => {
         this.notif.current.display("what i do data created", "success");
         this.props.reload();
@@ -124,7 +120,7 @@ class WhatIDoForm extends Component {
           />
           <div className="text-center">
             <button className={styles.button} onClick={this.submit}>
-              <p>Submit</p> <ArrowIcon />
+              <p>Submit</p> <ArrowRight />
             </button>
           </div>
         </div>

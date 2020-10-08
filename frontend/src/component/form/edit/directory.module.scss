@@ -1,0 +1,12 @@
+@import "../../../style/theme.scss";
+
+.deleteIcon {
+  margin-left: 0.7rem;
+  &:hover {
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    @include themify($themes) {
+      color: themed("buttonDanger");
+    }
+  }
+}

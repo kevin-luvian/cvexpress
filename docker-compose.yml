@@ -4,24 +4,33 @@ volumes:
   mongodb:
   
 services:
+    frontend:
+        container_name: express_frontend
+        restart: unless-stopped
+        build: ./frontend
+        ports:
+            - '7001:80'
     app:
         container_name: express_app
         restart: unless-stopped
         build: ./
         environment:
-            - MONGO_DB=mongodb+srv://admin:password12345@express-lizue.mongodb.net/express?retryWrites=true&w=majority
-            - NODE_ENV=development
+            - CORS_URL=https://mycv.atkev.site
+            - MONGO_DB=mongodb://mongodb:27017/express
+            - NODE_ENV=build
             - USERNAME_APP=admin
             - PASSWORD_APP=password
             - JWT_TOKEN_SECRET=itisasecretorisit
             - SALT_ROUNDS=10
         ports:
-            - '7001:9000'
+            - '7002:9000'
+        depends_on:
+            - db
     db:
         container_name: mongodb
         restart: unless-stopped
         image: mongo:4.4
         volumes: 
             - mongodb:/data/db
-        ports:
-            - '27017:27017'
+        expose:
+            - '27017'

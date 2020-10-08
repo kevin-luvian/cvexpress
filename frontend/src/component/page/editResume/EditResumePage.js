@@ -10,7 +10,7 @@ import axios from "../../../axios/Axios";
 
 class EditResumePage extends Component {
   constructor(props) {
-    super(props);
+    super();
     this.state = {
       edus: [],
       exps: [],
@@ -25,7 +25,7 @@ class EditResumePage extends Component {
   };
   fetchEdu = () => {
     axios
-      .get("/api/eduExp/educations")
+      .get("/api/resumes/education")
       .then((res) => {
         console.log("Edu data", res.data);
         this.setState({ edus: res.data });
@@ -42,7 +42,7 @@ class EditResumePage extends Component {
   };
   fetchExp = () => {
     axios
-      .get("/api/eduExp/experiences")
+      .get("/api/resumes")
       .then((res) => {
         console.log("Exp data", res.data);
         this.setState({ exps: res.data });

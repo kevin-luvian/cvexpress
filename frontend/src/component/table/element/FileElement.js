@@ -1,11 +1,9 @@
 import React, { Component } from "react";
-import Tooltip from "@material-ui/core/Tooltip";
-import Divider from "@material-ui/core/Divider";
-import Delete from "@material-ui/icons/Delete";
-import GetApp from "@material-ui/icons/GetApp";
-import ExpandMore from "@material-ui/icons/ExpandMore";
-import ExpandLess from "@material-ui/icons/ExpandLess";
+import { Tooltip, Divider } from "@material-ui/core";
+import { Edit, Delete, GetApp, ExpandMore, ExpandLess } from "@material-ui/icons";
+import NotificationService from "../../standalone/NotificationService";
 import ModalConfirmation from "../../modal/Confirmation";
+import ModalFileEdit from "../../modal/edit/FileEdit";
 import axios from "../../../axios/Axios";
 import { randId, toMb } from "../../../service/utils";
 import styles from "./fileelement.module.scss";
@@ -17,8 +15,10 @@ class FileElement extends Component {
     this.state = {
       id: randId(),
       expand: false,
-      modalOpen: false,
+      modalDeleteOpen: false,
+      modalFileEditOpen: false,
     };
+    this.notif = React.createRef();
   }
   componentDidUpdate = (prevProps) => {
     if (this.props.expandID !== prevProps.expandID) {
@@ -34,16 +34,45 @@ class FileElement extends Component {
       window.open(this.props.data.url, "_blank");
     else window.open(this.props.data.url, "_parent");
   };
+  handleEdit = (input) => {
+    console.log("Edit", this.props.data.id)
+    const data = {
+      _id: this.props._id,
+      filename: input.filename,
+      contentType: input.contentType
+    };
+    axios
+      .put(`/api/files/${this.props.data.id}`, data)
+      .then(() => {
+        this.setState({ modalFileEditOpen: false });
+        this.props.reload();
+      })
+      .catch((err) => {
+        let errmsg = "error";
+        try {
+          errmsg = err.response.data.message;
+        } catch {
+        } finally {
+          this.notif.current.display(errmsg, "danger");
+        }
+      });
+  };
   handleDelete = () => {
     console.log("Deleting", this.props.data.id)
     axios
-      .delete("/api/files/" + this.props.data.id)
+      .delete(`/api/files/${this.props.data.id}`)
       .then(() => {
-        this.setState({ modalOpen: false });
+        this.setState({ modalDeleteOpen: false });
         this.props.reload();
       })
-      .catch((error) => {
-        console.log(error.response);
+      .catch((err) => {
+        let errmsg = "error";
+        try {
+          errmsg = err.response.data.message;
+        } catch {
+        } finally {
+          this.notif.current.display(errmsg, "danger");
+        }
       });
   };
   handleExpand = () => {
@@ -61,20 +90,38 @@ class FileElement extends Component {
   render() {
     return (
       <React.Fragment>
+        <NotificationService ref={this.notif} />
         <ModalConfirmation
           title="Delete File"
-          message={`Are you sure you want to delete ${this.props.data.originalName} ?`}
+          message={`Are you sure you want to delete ${this.props.data.filename} ?`}
           warning="warning: this action cannot be undone."
-          value={this.state.modalOpen}
-          close={() => this.setState({ modalOpen: false })}
+          value={this.state.modalDeleteOpen}
+          close={() => this.setState({ modalDeleteOpen: false })}
           submit={this.handleDelete}
+        />
+        <ModalFileEdit
+          filename={this.props.data.filename}
+          contentType={this.props.data.contentType}
+          value={this.state.modalFileEditOpen}
+          close={() => this.setState({ modalFileEditOpen: false })}
+          submit={this.handleEdit}
         />
         <div className={styles.container}>
           <div className={styles.header}>
             <div className={`${styles.title} ${styles.scrollbar}`}>
-              <p>{this.props.data.originalName}</p>
+              <p>{this.props.data.filename}</p>
             </div>
             <div className={styles.action}>
+              <Tooltip title="Edit" arrow>
+                <div
+                  className={`${styles.edit} my-auto`}
+                  onClick={() => {
+                    this.setState({ modalFileEditOpen: true });
+                  }}
+                >
+                  <Edit />
+                </div>
+              </Tooltip>
               <Tooltip title="Download" arrow>
                 <div
                   className={`${styles.download} my-auto`}
@@ -87,7 +134,7 @@ class FileElement extends Component {
                 <div
                   className={`${styles.delete} my-auto`}
                   onClick={() => {
-                    this.setState({ modalOpen: true });
+                    this.setState({ modalDeleteOpen: true });
                   }}
                 >
                   <Delete />
@@ -124,9 +171,7 @@ class FileElement extends Component {
               <div>
                 <p>{toMb(this.props.data.size)}mb</p>
                 <p>{this.props.data.contentType}</p>
-                {/*
                 <p>{this.props.data.uploadDate.toLocaleDateString()}</p>
-                */}
               </div>
             </div>
           </div>

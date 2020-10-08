@@ -3,7 +3,7 @@ import Dialog from "@material-ui/core/Dialog";
 import FunFactForm from "../../form/edit/FunFactForm";
 import styles from "./modaledit.module.scss";
 
-class WhatIDo extends Component {
+class FunFact extends Component {
   render() {
     return (
       <Dialog open={this.props.value} onClose={this.props.close}>
@@ -14,7 +14,7 @@ class WhatIDo extends Component {
             _id={this.props.data._id}
             icon={this.props.data.icon}
             title={this.props.data.title}
-            number={this.props.data.number}
+            number={this.props.data.description}
             reload={() => {
               this.props.close();
               this.props.reload();
@@ -26,4 +26,4 @@ class WhatIDo extends Component {
   }
 }
 
-export default WhatIDo;
+export default FunFact;

@@ -12,9 +12,9 @@ const persistConfig = {
 };
 
 const pReducer = persistReducer(persistConfig, rootReducer);
-const middleware = applyMiddleware(thunk, logger);
+// const middleware = applyMiddleware(thunk, logger); //logger
 
-const store = createStore(pReducer, middleware);
+const store = createStore(pReducer);
 const persistor = persistStore(store);
 
 export { store, persistor };

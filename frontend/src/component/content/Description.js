@@ -9,10 +9,10 @@ class Description extends Component {
     this.state = {
       loadCount: 0,
       professions: [],
-      fullName: "",
-      bio: "",
-      imageURL: "",
-      cvURL: "",
+      fullname: "",
+      quickDescription: "",
+      imageData: "",
+      cvData: "",
       padding: "0px",
     };
   }
@@ -65,11 +65,8 @@ class Description extends Component {
     axios
       .get("/api/myinfo")
       .then((res) => {
-        const info = res.data;
-        console.log("User info", info);
-        if (info.length > 0) {
-          this.setState({ fullName: info[0].fullName });
-        }
+        console.log("User info", res.data);
+        this.setState({ fullname: res.data.fullname });
 
         if (this.props.requireLoad) {
           this.setState({ loadCount: this.state.loadCount + 1 });
@@ -78,7 +75,7 @@ class Description extends Component {
       .catch((err) => {
         let errmsg = "error";
         try {
-          errmsg = err.response.data.message;
+          errmsg = err.response.data.error;
         } catch {
         } finally {
           console.log("Error", errmsg);
@@ -97,7 +94,7 @@ class Description extends Component {
         this.fetchCVMetadata(res.data.cvID);
         this.setState({
           professions: res.data.professions.join(", "),
-          bio: res.data.quickDescription,
+          quickDescription: res.data.quickDescription,
         });
 
         if (this.props.requireLoad) {
@@ -107,7 +104,7 @@ class Description extends Component {
       .catch((err) => {
         let errmsg = "error";
         try {
-          errmsg = err.response.data.message;
+          errmsg = err.response.data.error;
         } catch {
         } finally {
           console.log("Error", errmsg);
@@ -121,8 +118,8 @@ class Description extends Component {
     axios
       .get("/api/files/" + id)
       .then((res) => {
-        console.log("ImgUrl", this.parseURL(res.data));
-        this.setState({ imageURL: this.parseURL(res.data) });
+        console.log("Img Data", res.data);
+        this.setState({ imageData: res.data });
         if (this.props.requireLoad) {
           this.setState({ loadCount: this.state.loadCount + 1 });
         }
@@ -131,7 +128,7 @@ class Description extends Component {
       .catch((err) => {
         let errmsg = "error";
         try {
-          errmsg = err.response.data.message;
+          errmsg = err.response.data.error;
         } catch {
         } finally {
           console.log("Error", errmsg);
@@ -145,12 +142,13 @@ class Description extends Component {
     axios
       .get("/api/files/" + id)
       .then((res) => {
-        this.setState({ cvURL: this.parseURL(res.data) });
+        console.log("CV Data", res.data);
+        this.setState({ cvData: res.data });
       })
       .catch((err) => {
         let errmsg = "error";
         try {
-          errmsg = err.response.data.message;
+          errmsg = err.response.data.error;
         } catch {
         } finally {
           console.log("Error", errmsg);
@@ -158,10 +156,11 @@ class Description extends Component {
       });
   };
   handleDownload = () => {
-    window.open(this.state.cvURL, "_blank");
-  };
-  parseURL = (metadata) => {
-    return `${axios.defaults.baseURL}/files/${metadata.fileId}/${metadata.originalName}`;
+    if (this.state.cvData) {
+      if (["image", "pdf"].some(el => this.state.cvData.contentType.includes(el)))
+        window.open(this.state.cvData.url, "_blank");
+      else window.open(this.state.cvData.url, "_parent");
+    }
   };
   transform = (oldVal, viewPort, range) => {
     //const range = [0.8, -0.8];
@@ -176,7 +175,7 @@ class Description extends Component {
               <div
                 className={styles.inner}
                 style={{
-                  backgroundImage: `url('${this.state.imageURL}')`,
+                  backgroundImage: `url('${this.state.imageData.url}')`,
                 }}
               />
             </div>
@@ -188,8 +187,8 @@ class Description extends Component {
                 paddingTop: this.state.padding,
               }}
             >
-              <h1>{this.state.fullName}</h1>
-              <p>{this.state.bio}</p>
+              <h1>{this.state.fullname}</h1>
+              <p>{this.state.quickDescription}</p>
               <div className={styles.action}>
                 <button className={styles.button} onClick={this.handleDownload}>
                   Download CV

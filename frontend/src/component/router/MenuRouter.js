@@ -3,9 +3,10 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import HomePage from "../page/home/HomePage";
 import ResumePage from "../page/resume/ResumePage";
-import EditResumePage from "../page/editResume/EditResumePage";
 import UploadPage from "../page/upload/UploadPage";
 import EditPage from "../page/edit/EditPage";
+import EditResumePage from "../page/editResume/EditResumePage";
+import EditDirectoryPage from "../page/editDirectory/EditDirectoryPage";
 import LoginPage from "../page/login/LoginPage";
 import Error404Page from "../page/error/Error404Page";
 import clearStore from "../../redux/actions/ClearStoreTempAction";
@@ -15,7 +16,7 @@ import MainTemplate from "../template/MainTemplate";
 
 class MenuRouter extends Component {
   constructor(props) {
-    super(props);
+    super();
     this.state = {};
   }
   checkAuth = async () => {
@@ -57,6 +58,7 @@ class MenuRouter extends Component {
           <ProtectedRoute path="/upload" component={UploadPage} />
           <ProtectedRoute path="/edit" exact component={EditPage} />
           <ProtectedRoute path="/edit/resume" component={EditResumePage} />
+          <NavRoute path="/edit/directory" component={EditDirectoryPage} />
           <Route path="/login">
             <LoginPage />
           </Route>

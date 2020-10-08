@@ -5,7 +5,7 @@ import axios from "../../axios/Axios";
 
 class Education extends Component {
   constructor(props) {
-    super(props);
+    super();
     this.state = { edus: [] };
   }
   componentDidMount = () => {
@@ -13,7 +13,7 @@ class Education extends Component {
   };
   fetchEdu = () => {
     axios
-      .get("/api/eduExp/educations")
+      .get("/api/resumes/education")
       .then((res) => {
         this.setState({ edus: res.data });
         if (this.props.requireLoad) {

@@ -42,19 +42,21 @@ class LoginPage extends Component {
           },
         });
       })
-      .catch((error) => {
-        let message = "error";
+      .catch((err) => {
+        let errmsg = "error";
         try {
-          message = error.response.data.message;
+          errmsg = err.response.data.message;
+        } catch {
         } finally {
+          console.log("Error", errmsg);
           this.setState({
             alert: {
               show: true,
               severity: "error",
-              message: message,
+              message: errmsg,
             },
           });
-        }
+        };
       });
   };
   render() {

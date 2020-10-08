@@ -3,8 +3,10 @@
 @import "../../../style/responsive.scss";
 
 .root {
-  @include themify($themes) {
-    color: themed("textColor");
+  display: block;
+  margin-top: 2rem;
+  @include media(desktop) {
+    margin-top: 0;
   }
 }
 
@@ -16,28 +18,21 @@
   margin-bottom: 2rem;
 }
 
-.pageHeader {
-  font-weight: 700;
-  font-size: 1.8rem;
-  margin: 1rem auto;
-  text-align: center;
-}
-
 .header {
   font-weight: 700;
   font-size: 1.2rem;
   margin-bottom: 0.5rem;
 }
 
+.divider {
+  margin: 2rem 0 !important;
+  width: 100% !important;
+}
+
 .inputContainer {
   @include media(desktop) {
     padding: 0 1rem;
   }
-}
-
-.input {
-  width: 100%;
-  margin-bottom: 1.5rem !important;
 }
 
 .button {
@@ -57,7 +52,7 @@
     }
   }
   @include media(desktop) {
-    width: fit-content;
+    width: 100%;
   }
   p {
     display: inline;

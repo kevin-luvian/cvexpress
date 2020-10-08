@@ -5,7 +5,7 @@ import styles from "./main.module.scss";
 
 class MainTemplate extends Component {
   constructor(props) {
-    super(props);
+    super();
     this.state = { styleid: 0 };
   }
   chooseTheme = () => {

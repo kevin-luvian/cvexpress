@@ -13,7 +13,7 @@ class DescriptionForm extends Component {
       fullname: "",
       address: "",
       gender: "",
-      phoneNumber: "",
+      phone: "",
       email: "",
     };
     this.notif = React.createRef();
@@ -21,28 +21,25 @@ class DescriptionForm extends Component {
   componentDidMount = () => {
     this.fetchUserInfo();
   };
-  changePhoneNumber = (e) => {
+  changePhone = (e) => {
     const input_param = e.target.value;
     const regex = new RegExp("^[0-9]+$");
     if (regex.test(input_param) && input_param.length <= 12) {
-      this.setState({ phoneNumber: input_param });
+      this.setState({ phone: input_param });
     }
   };
   fetchUserInfo = () => {
     axios
       .get("/api/myinfo")
-      .then((response) => {
-        const userInfo = response.data;
-        console.log("User Info", userInfo);
-        if (userInfo.length > 0) {
-          this.setState({
-            fullname: userInfo[0].fullName,
-            email: userInfo[0].email,
-            phoneNumber: userInfo[0].phoneNumber,
-            address: userInfo[0].address,
-            gender: userInfo[0].gender,
-          });
-        }
+      .then((res) => {
+        console.log("User Info", res.data);
+        this.setState({
+          fullname: res.data.fullname,
+          email: res.data.email,
+          phone: res.data.phone,
+          address: res.data.address,
+          gender: res.data.gender,
+        });
       })
       .catch((err) => {
         let errmsg = "error";
@@ -56,9 +53,9 @@ class DescriptionForm extends Component {
   };
   postUserInfo = () => {
     const data = {
-      fullName: this.state.fullname,
+      fullname: this.state.fullname,
       email: this.state.email,
-      phoneNumber: this.state.phoneNumber,
+      phone: this.state.phone,
       address: this.state.address,
       gender: this.state.gender,
     };
@@ -106,8 +103,8 @@ class DescriptionForm extends Component {
           <TextField
             className={styles.input}
             label="Phone Number"
-            value={this.state.phoneNumber}
-            onChange={this.changePhoneNumber}
+            value={this.state.phone}
+            onChange={this.changePhone}
           />
           <TextField
             className={styles.input}

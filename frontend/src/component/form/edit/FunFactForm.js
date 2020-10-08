@@ -28,11 +28,12 @@ class WhatIDoForm extends Component {
     const data = {
       _id: this.props._id,
       icon: this.state.icon,
+      type: "funfact",
       title: this.state.title,
-      number: this.state.number,
+      description: this.state.number,
     };
     axios
-      .put("/api/funfact", data)
+      .put(`/api/quickinfos/${data._id}`, data)
       .then(() => {
         this.props.reload();
       })
@@ -49,11 +50,12 @@ class WhatIDoForm extends Component {
   postModel = () => {
     const data = {
       icon: this.state.icon,
+      type: "funfact",
       title: this.state.title,
-      number: this.state.number,
+      description: this.state.number,
     };
     axios
-      .post("/api/funfact", data)
+      .post("/api/quickinfos", data)
       .then(() => {
         this.notif.current.display("fun fact data created", "success");
         this.props.reload();

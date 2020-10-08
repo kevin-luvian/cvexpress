@@ -1,0 +1,13 @@
+@import "../../../style/theme.scss";
+@import "../../../style/variables.scss";
+@import "../../../style/responsive.scss";
+
+.imageItem {
+  padding: 10px;
+  h3 {
+    background-color: aqua;
+    padding: 30px 0px;
+    margin-bottom: 0;
+    text-align: center;
+  }
+}

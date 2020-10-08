@@ -7,7 +7,7 @@ import styles from "./resumepage.module.scss";
 
 class ResumePage extends Component {
   constructor(props) {
-    super(props);
+    super();
     this.state = { loadCount: 0, loading: true };
   }
   componentDidUpdate = (prevProps, prevState, snapshot) => {

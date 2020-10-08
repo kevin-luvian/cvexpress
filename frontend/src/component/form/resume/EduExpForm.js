@@ -14,7 +14,7 @@ class EduExpForm extends Component {
       option: [],
       selectedYear: this.props.year || "",
       selectedYearEnd: this.props.yearEnd || "",
-      smallDesc: this.props.smallDesc || "",
+      snippet: this.props.snippet || "",
       title: this.props.title || "",
       description: this.props.description || "",
     };
@@ -24,18 +24,18 @@ class EduExpForm extends Component {
     this.generateOption();
   };
   postModel = () => {
-    const year =
+    const period =
       this.state.selectedYear +
       (this.state.selectedYearEnd ? " - " + this.state.selectedYearEnd : "");
     const data = {
-      type: this.props.isEdu ? true : false,
-      year: year,
-      smallDesc: this.state.smallDesc,
+      type: this.props.isEdu ? "education" : "experience",
+      period: period,
+      snippet: this.state.snippet,
       title: this.state.title,
       description: this.state.description,
     };
     axios
-      .post("/api/eduExp", data)
+      .post("/api/resumes", data)
       .then(() => {
         this.notif.current.display(
           (this.props.isEdu ? "Education" : "Experience") + " data created",
@@ -54,19 +54,19 @@ class EduExpForm extends Component {
       });
   };
   putModel = () => {
-    const year =
+    const period =
       this.state.selectedYear +
       (this.state.selectedYearEnd ? " - " + this.state.selectedYearEnd : "");
     const data = {
       _id: this.props._id,
       type: this.props.type,
-      year: year,
-      smallDesc: this.state.smallDesc,
+      period: period,
+      snippet: this.state.snippet,
       title: this.state.title,
       description: this.state.description,
     };
     axios
-      .put("/api/eduExp", data)
+      .put(`/api/resumes/${data._id}`, data)
       .then(() => {
         this.notif.current.display(
           (this.props.isEdu ? "Education" : "Experience") + " data updated",
@@ -123,11 +123,11 @@ class EduExpForm extends Component {
               renderInput={(params) => <TextField {...params} label="Year" />}
             />
             <TextField
-              className={`${styles.input} ${stylesPrimary.smallDesc}`}
-              label="Small Description"
-              value={this.state.smallDesc}
+              className={`${styles.input} ${stylesPrimary.snippet}`}
+              label="Small Snippet"
+              value={this.state.snippet}
               onChange={(e) => {
-                this.setState({ smallDesc: e.target.value });
+                this.setState({ snippet: e.target.value });
               }}
             />
             <TextField

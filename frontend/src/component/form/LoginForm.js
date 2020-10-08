@@ -15,7 +15,7 @@ import styles from "./loginform.module.scss";
 
 class LoginForm extends Component {
   constructor(props) {
-    super(props);
+    super();
     this.state = {
       open: false,
       username: "",

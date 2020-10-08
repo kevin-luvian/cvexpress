@@ -6,10 +6,9 @@ require("dotenv").config();
 const storage = new GridFsStorage({
     url: process.env.MONGO_DB,
     options: { useNewUrlParser: true, useUnifiedTopology: true },
-    file: (req, file) => {
+    file: () => {
         return {
-            bucketName: "upload",
-            filename: file.originalname,
+            bucketName: "upload"
         };
     }
 });

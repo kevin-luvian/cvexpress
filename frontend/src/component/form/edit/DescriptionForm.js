@@ -11,9 +11,9 @@ class DescriptionForm extends Component {
     super();
     this.state = {
       professions: "",
-      bio: "",
-      selectedImage: "",
-      selectedCV: "",
+      quickDescription: "",
+      selectedImage: null,
+      selectedCV: null,
       files: [],
     };
     this.notif = React.createRef();
@@ -25,8 +25,9 @@ class DescriptionForm extends Component {
   fetchFileMetadatas = () => {
     axios
       .get("/api/files")
-      .then((response) => {
-        this.setState({ files: response.data });
+      .then((res) => {
+        console.log("Files", res.data)
+        this.setState({ files: res.data });
       })
       .catch((err) => {
         let errmsg = "error";
@@ -45,7 +46,7 @@ class DescriptionForm extends Component {
         console.log("Desc info", res.data);
         this.setState({
           professions: res.data.professions.join(", "),
-          bio: res.data.quickDescription,
+          quickDescription: res.data.quickDescription,
           selectedImage: res.data.imageID,
           selectedCV: res.data.cvID,
         });
@@ -63,9 +64,9 @@ class DescriptionForm extends Component {
   postDescription = () => {
     const data = {
       professions: this.state.professions,
-      quickBio: this.state.bio,
-      imageFile: this.state.selectedImage,
-      cvFile: this.state.selectedCV,
+      quickDescription: this.state.quickDescription,
+      imageID: this.state.selectedImage,
+      cvID: this.state.selectedCV,
     };
     axios
       .post("/api/description", data)
@@ -98,13 +99,13 @@ class DescriptionForm extends Component {
           />
           <TextField
             className={styles.input}
-            label="Quick Bio"
+            label="Quick Description"
             multiline
             rows={2}
             rowsMax={5}
-            value={this.state.bio}
+            value={this.state.quickDescription}
             onChange={(e) => {
-              this.setState({ bio: e.target.value });
+              this.setState({ quickDescription: e.target.value });
             }}
           />
           <TextField
@@ -118,7 +119,7 @@ class DescriptionForm extends Component {
           >
             {this.state.files.map((file) => (
               <MenuItem key={file._id} value={file._id}>
-                {file.originalName}
+                {file.filename}
               </MenuItem>
             ))}
           </TextField>
@@ -133,7 +134,7 @@ class DescriptionForm extends Component {
           >
             {this.state.files.map((file) => (
               <MenuItem key={file._id} value={file._id}>
-                {file.originalName}
+                {file.filename}
               </MenuItem>
             ))}
           </TextField>

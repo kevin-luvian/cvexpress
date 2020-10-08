@@ -3,9 +3,8 @@ import { store } from "../redux/Store";
 import ClearStoreTempAction from "../redux/actions/ClearStoreTempAction";
 
 const instance = axios.create({
-//  baseURL: "https://mycv.atkev.site",
-  baseURL: "http://localhost:9000",
-//  baseURL: "https://kevinlh.herokuapp.com",
+    baseURL: "http://localhost:9000",
+//    baseURL: "https://mycv.atkev.site",
 });
 
 instance.interceptors.request.use(
@@ -13,8 +12,6 @@ instance.interceptors.request.use(
     try {
       config.headers.Authorization = store.getState().token;
     } finally {
-      config.headers.ContentType = "application/json";
-      config.headers.AccessControlAllowOrigin = "*";
       return config;
     }
   },

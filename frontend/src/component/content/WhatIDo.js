@@ -25,7 +25,6 @@ class WhatIDo extends Component {
         }
       })
       .catch((err) => {
-        console.log("Error", err.response.data.message);
         let errmsg = "error";
         try {
           errmsg = err.response.data.message;

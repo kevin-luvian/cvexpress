@@ -17,7 +17,7 @@ const resumeRouter = require('./routes/resume');
 const messageRouter = require('./routes/message');
 const directoryRouter = require('./routes/directory');
 
-const allowedOrigins = ['http://localhost:3000','http://localhost:7000', 'http://mycv.atkev.site'];
+const allowedOrigins = [process.env.CORS_URL, 'https://mycv.atkev.site', 'http://localhost:3000'];
 
 const app = express();
 require("dotenv").config();

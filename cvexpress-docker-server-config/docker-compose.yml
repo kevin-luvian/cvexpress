@@ -4,19 +4,26 @@ volumes:
   mongodb:
   
 services:
+    frontend:
+        container_name: express_frontend
+        restart: unless-stopped
+        image: wkeplon/cvexpress_frontend:dev-cloud
+        ports:
+            - '7001:80'
     app:
         container_name: express_app
         restart: unless-stopped
-        build: wkeplon/cvexpress_app:dev
+        image: wkeplon/cvexpress_app:dev
         environment:
+            - CORS_URL=https://mycv.atkev.site
             - MONGO_DB=mongodb://mongodb:27017/express
-            - NODE_ENV=development
+            - NODE_ENV=build
             - USERNAME_APP=admin
             - PASSWORD_APP=password
             - JWT_TOKEN_SECRET=itisasecretorisit
             - SALT_ROUNDS=10
         ports:
-            - '7001:9000'
+            - '7002:9000'
         depends_on:
             - db
     db:
@@ -25,5 +32,5 @@ services:
         image: mongo:4.4
         volumes: 
             - mongodb:/data/db
-        ports:
-            - '27017:27017'
+        expose:
+            - '27017'

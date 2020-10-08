@@ -5,7 +5,7 @@ import styles from "./modaledit.module.scss";
 
 class EduExpModal extends Component {
   getYear = () => {
-    return this.props.data.year.split(" - ");
+    return this.props.data.period.split(" - ");
   };
   render() {
     return (

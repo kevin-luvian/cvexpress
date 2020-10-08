@@ -10,7 +10,7 @@ import axios from "../../axios/Axios";
 
 class FunFacts extends Component {
   constructor(props) {
-    super(props);
+    super();
     this.state = { modalConfirmOpen: false, modalOpen: false };
     this.notif = React.createRef();
   }
@@ -23,7 +23,7 @@ class FunFacts extends Component {
   };
   handleDelete = () => {
     axios
-      .delete("/api/funfact/" + this.props.data._id)
+      .delete(`/api/quickinfos/${this.props.data._id}`)
       .then(() => {
         this.setState({ modalConfirmOpen: false });
         this.props.reload();
@@ -77,7 +77,7 @@ class FunFacts extends Component {
           )}
           <i className={this.props.data.icon} />
           <h1>{this.props.data.title}</h1>
-          <h2>{this.transformNumber(this.props.data.number + "")}</h2>
+          <h2>{this.transformNumber(this.props.data.description)}</h2>
         </div>
       </React.Fragment>
     );

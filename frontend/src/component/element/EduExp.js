@@ -35,7 +35,7 @@ class EduExp extends Component {
   };
   handleDelete = () => {
     axios
-      .delete("/api/eduExp/" + this.props.data._id)
+      .delete(`/api/resumes/${this.props.data._id}`)
       .then(() => {
         this.notif.current.display(
           this.props.data.title + " data deleted",
@@ -87,8 +87,8 @@ class EduExp extends Component {
           </div>
           <div className={styles.container}>
             <div className={styles.upper}>
-              <p className={styles.year}>{this.props.data.year}</p>
-              <p className={styles.smallDesc}>{this.props.data.smallDesc}</p>
+              <p className={styles.period}>{this.props.data.period}</p>
+              <p className={styles.snippet}>{this.props.data.snippet}</p>
               {this.props.edit && (
                 <div className={styles.action}>
                   <Tooltip title="Edit" arrow>

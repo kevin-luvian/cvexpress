@@ -11,6 +11,7 @@ import $ from "jquery";
 const normalLinks = [
   { menu: "Home", url: "/", submenu: [] },
   { menu: "Resume", url: "/resume", submenu: [] },
+  { menu: "Edit Directories", url: "/edit/directory", submenu: [] },
   { menu: "Login", url: "/login", submenu: [] },
 ];
 const protectedLinks = [
@@ -29,8 +30,12 @@ const protectedLinks = [
         url: "/edit",
       },
       {
-        menu: "Edit Resume",
+        menu: "Edit Resumes",
         url: "/edit/resume",
+      },
+      {
+        menu: "Edit Directories",
+        url: "/edit/directory",
       },
     ],
   },

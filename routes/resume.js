@@ -7,8 +7,8 @@ const Resume = require('../models/Resume');
 router.post('/', tokenAuth, (req, res, next) => {
   const obj_info = {
     title: req.body.title,
-    type: req.body.title,
-    period: req.body.title,
+    type: req.body.type,
+    period: req.body.period,
     snippet: req.body.snippet,
     description: req.body.description
   };
@@ -54,8 +54,8 @@ router.put('/:id', tokenAuth, (req, res) => {
   const id_param = req.params.id;
   const obj_info = {
     title: req.body.title,
-    type: req.body.title,
-    period: req.body.title,
+    type: req.body.type,
+    period: req.body.period,
     snippet: req.body.snippet,
     description: req.body.description
   };

@@ -1,6 +1,6 @@
-
 const router = require('express').Router();
 const grid = require('gridfs-stream');
+const path = require('path');
 const mongoose = require("mongoose");
 const tokenAuth = require("../middleware/tokenauth");
 const upload = require("../middleware/upload");
@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
         obj_arr.forEach(obj => {
             obj["url"] = `http://${req.headers.host}/api/files/` +
                 `${obj._id}/` +
-                obj.originalName.replace(/\s+/g, "%20");
+                obj.filename.replace(/\s+/g, "%20");
         });
         return res.json(obj_arr);
     });
@@ -32,14 +32,16 @@ router.post('/', tokenAuth, async (req, res) => {
             return res.status(400).json({ error: "You must select a file" });
         }
 
-        if (req.group == "") {
-            return res.status(400).json({ error: "You must define a group" });
-        }
+        const filename = path.extname(req.headers.filename) == path.extname(req.file.originalname) ?
+            req.headers.filename :
+            req.headers.filename + path.extname(req.file.originalname);
+
         // Create a Metadata
         const filemetadata = new FileMetadata({
             _id: req.file.id,
-            originalName: req.file.originalname,
+            filename: filename,
             contentType: req.file.contentType,
+            uploadDate: req.file.uploadDate,
             size: req.file.size,
             group: req.group
         });
@@ -55,7 +57,56 @@ router.post('/', tokenAuth, async (req, res) => {
     }
 })
 
+/* PUT file by ID */
+router.put('/:id', (req, res) => {
+    const fileID = mongoose.Types.ObjectId(req.params.id);
+    const obj_info = {
+        filename: req.body.filename,
+        contentType: req.body.contentType
+    };
+    console.log("Obj Info", obj_info)
+
+    // find file from id
+    FileMetadata.findOne({ _id: fileID }).lean().exec((err, obj) => {
+        // check for error
+        if (err | obj === null) {
+            console.log("[ error ]", err)
+            return res.status(404).json({ error: "error finding file" })
+        }
+        const filename = path.extname(obj.filename) == path.extname(obj_info.filename) ?
+            obj_info.filename :
+            obj_info.filename + path.extname(obj.filename);
+        // find file from id
+        FileMetadata.findOneAndUpdate({ _id: fileID }, obj_info, (err) => {
+            // check for error
+            if (err) {
+                console.log("[ error ]", err)
+                return res.status(404).json({ error: "error updating file" })
+            }
+            res.json({ message: 'file has been updated.' });
+        });
+    });
+});
+
 /* GET file by ID */
+router.get('/:id', (req, res) => {
+    const fileID = mongoose.Types.ObjectId(req.params.id);
+
+    // find file from id
+    FileMetadata.findOne({ _id: fileID }).lean().exec((err, obj) => {
+        // check for error
+        if (err | obj === null) {
+            console.log("[ error ]", err)
+            return res.status(404).json({ error: "error finding file" })
+        }
+        obj["url"] = `http://${req.headers.host}/api/files/` +
+            `${obj._id}/` +
+            obj.filename.replace(/\s+/g, "%20");
+        res.json(obj);
+    });
+});
+
+/* GET (Render) file by ID and Filename */
 router.get('/:id/:filename', (req, res) => {
     const fileID = mongoose.Types.ObjectId(req.params.id);
     const db = mongoose.connection.db;

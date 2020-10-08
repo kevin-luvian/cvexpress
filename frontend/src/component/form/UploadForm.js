@@ -1,13 +1,18 @@
 import React, { Component } from "react";
-import LinearProgress from "@material-ui/core/LinearProgress";
-import FileInput from "../input/FileInput";
-import Paper from "@material-ui/core/Paper";
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
-import Publish from "@material-ui/icons/Publish";
+import {
+  TextField,
+  Paper,
+  Button,
+  IconButton,
+  LinearProgress
+} from "@material-ui/core";
+import {
+  Close,
+  Publish
+} from "@material-ui/icons";
 import Alert from "@material-ui/lab/Alert";
 import styles from "./uploadform.module.scss";
+import FileInput from "../input/FileInput";
 import axios from "../../axios/Axios";
 import { toMb } from "../../service/utils";
 
@@ -17,6 +22,7 @@ class UploadForm extends Component {
     this.state = {
       alert: { display: false, type: "", message: "" },
       progress: false,
+      selectedFilename: "",
       selectedFile: null,
       renderFile: null,
     };
@@ -25,6 +31,7 @@ class UploadForm extends Component {
     this.resetAlert();
     this.setState({
       selectedFile: file,
+      selectedFilename: file.name,
       renderFile: URL.createObjectURL(file),
     });
   };
@@ -37,11 +44,15 @@ class UploadForm extends Component {
     }
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("file[name]", this.state.selectedFilename);
     axios
       .post("/api/files", formData, {
-        headers: { size: file.size },
+        headers: { 
+          filename:  this.state.selectedFilename,
+          size: file.size 
+        }
       })
-      .then((response) => {
+      .then(() => {
         this.setState({
           progress: false,
           alert: {
@@ -52,14 +63,14 @@ class UploadForm extends Component {
         });
         this.props.reload();
       })
-      .catch((error) => {
-        console.log("Error", error.response);
+      .catch((err) => {
+        console.log("Error", err.response);
         this.setState({
           progress: false,
           alert: {
             display: true,
             type: "error",
-            message: error.response.data.message,
+            message: err.response.data.error,
           },
         });
       });
@@ -89,9 +100,14 @@ class UploadForm extends Component {
                 <div
                   className={`${styles.textArea} ${styles.col} col text-left`}
                 >
-                  <h5 className={`${styles.textHeading} overflow-hidden`}>
-                    {this.state.selectedFile.name}
-                  </h5>
+                  <TextField
+                    className={'w-100 mb-3'}
+                    label="Filename"
+                    value={this.state.selectedFilename}
+                    onChange={(e) => {
+                      this.setState({ selectedFilename: e.target.value });
+                    }}
+                  />
                   <p className={styles.text}>
                     size &emsp; : {toMb(this.state.selectedFile.size)}mb
                   </p>
@@ -113,7 +129,7 @@ class UploadForm extends Component {
                             this.resetAlert();
                           }}
                         >
-                          <CloseIcon fontSize="inherit" />
+                          <Close fontSize="inherit" />
                         </IconButton>
                       }
                     >

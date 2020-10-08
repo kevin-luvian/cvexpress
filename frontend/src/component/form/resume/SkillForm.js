@@ -19,7 +19,7 @@ class SkillForm extends Component {
     };
     this.notif = React.createRef();
   }
-  componentDidMount = () => {};
+  componentDidMount = () => { };
   postModel = () => {
     const data = {
       category: this.state.category,
@@ -27,7 +27,7 @@ class SkillForm extends Component {
       percentage: this.state.percentage,
     };
     axios
-      .post("/api/skill", data)
+      .post("/api/skills", data)
       .then(() => {
         this.notif.current.display("Skill data created", "success");
         this.props.reload();
@@ -50,7 +50,7 @@ class SkillForm extends Component {
       percentage: this.state.percentage,
     };
     axios
-      .put("/api/skill", data)
+      .put(`/api/skills/${data._id}`, data)
       .then(() => {
         this.notif.current.display("Skill data updated", "normal");
         this.props.reload();

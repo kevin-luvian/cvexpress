@@ -2,6 +2,7 @@ FROM node:12 as build
 WORKDIR /app
 ENV PATH ./node_modules/.bin:$PATH
 COPY package.json ./
+COPY package-lock.json ./
 RUN npm install
 COPY . ./
 RUN npm run build

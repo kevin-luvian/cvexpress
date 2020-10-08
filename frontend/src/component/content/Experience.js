@@ -5,7 +5,7 @@ import styles from "./contents.module.scss";
 
 class Experience extends Component {
   constructor(props) {
-    super(props);
+    super();
     this.state = { exps: [] };
   }
   componentDidMount = () => {
@@ -13,7 +13,7 @@ class Experience extends Component {
   };
   fetchExp = () => {
     axios
-      .get("/api/eduExp/experiences")
+      .get("/api/resumes/experience")
       .then((res) => {
         this.setState({ exps: res.data });
         if (this.props.requireLoad) {

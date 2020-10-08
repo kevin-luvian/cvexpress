@@ -3,8 +3,7 @@ import Paper from "@material-ui/core/Paper";
 import InputBase from "@material-ui/core/InputBase";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
-import SearchIcon from "@material-ui/icons/Search";
-import FilterIcon from "@material-ui/icons/FilterList";
+import { Search, FilterList } from "@material-ui/icons";
 import FileElement from "./element/FileElement";
 import axios from "../../axios/Axios";
 import styles from "./tablefile.module.scss";
@@ -42,16 +41,16 @@ class TableFile extends Component {
     const res = [];
     for (let i = 0; i < files.length; i++) {
       let fileID = files[i]._id;
-      let originalName = files[i].originalName;
+      let filename = files[i].filename;
       let size = files[i].size;
-      //let uploadDate = new Date(files[i].uploadDate);
+      let uploadDate = new Date(files[i].uploadDate);
       let contentType = files[i].contentType;
       let url = files[i].url;
       res.push({
-        originalName: originalName,
+        filename: filename,
         id: fileID,
         size: size,
-        //uploadDate: uploadDate,
+        uploadDate: uploadDate,
         contentType: contentType,
         url: url,
       });
@@ -61,7 +60,7 @@ class TableFile extends Component {
   handleSearch = (search_param) => {
     const res = [];
     this.state.files.forEach((file, i) => {
-      let fileName = file.originalName.toLowerCase();
+      let fileName = file.filename.toLowerCase();
       if (fileName.includes(search_param.toLowerCase())) res.push(file);
     });
     this.setState({ search: search_param, displayFiles: res });
@@ -77,7 +76,7 @@ class TableFile extends Component {
               $(`.${styles.input} input`).focus();
             }}
           >
-            <SearchIcon />
+            <Search />
           </div>
           <Divider className={styles.divider} orientation="vertical" />
           <InputBase
@@ -90,7 +89,7 @@ class TableFile extends Component {
           />
           <Divider className={styles.divider} orientation="vertical" />
           <IconButton className={styles.filter}>
-            <FilterIcon />
+            <FilterList />
           </IconButton>
         </Paper>
         {this.state.displayFiles.map((file, i) => {
