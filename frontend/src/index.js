@@ -11,13 +11,13 @@ import "bootstrap/dist/css/bootstrap.css";
 import "./style/root.scss";
 
 ReactDOM.render(
-  <React.StrictMode>
+  <>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <MenuRouter />
       </PersistGate>
     </Provider>
-  </React.StrictMode>,
+  </>,
   document.getElementById("root")
 );
 
