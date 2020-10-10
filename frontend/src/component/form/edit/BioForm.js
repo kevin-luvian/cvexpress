@@ -16,7 +16,7 @@ class DescriptionForm extends Component {
       phone: "",
       email: "",
     };
-    this.notif = React.createRef();
+    this.notif = null;
   }
   componentDidMount = () => {
     this.fetchUserInfo();
@@ -47,7 +47,7 @@ class DescriptionForm extends Component {
           errmsg = err.response.data.message;
         } catch {
         } finally {
-          this.notif.current.display(errmsg, "danger");
+          this.notif.display(errmsg, "danger");
         }
       });
   };
@@ -62,7 +62,7 @@ class DescriptionForm extends Component {
     axios
       .post("/api/myinfo", data)
       .then(() => {
-        this.notif.current.display("user data updated", "success");
+        this.notif.display("user data updated", "success");
         this.fetchUserInfo();
       })
       .catch((err) => {
@@ -71,9 +71,14 @@ class DescriptionForm extends Component {
           errmsg = err.response.data.message;
         } catch {
         } finally {
-          this.notif.current.display(errmsg, "danger");
+          this.notif.display(errmsg, "danger");
         }
       });
+  };
+  addNotif = element => {
+    if (element !== null) {
+      this.notif = element;
+    };
   };
   render() {
     const genderOption = [
@@ -82,7 +87,7 @@ class DescriptionForm extends Component {
     ];
     return (
       <React.Fragment>
-        <NotificationService ref={this.notif} />
+        <NotificationService ref={this.addNotif} />
         <div className={styles.root}>
           <TextField
             className={styles.input}

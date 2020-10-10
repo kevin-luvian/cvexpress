@@ -3,8 +3,8 @@ import { store } from "../redux/Store";
 import ClearStoreTempAction from "../redux/actions/ClearStoreTempAction";
 
 const instance = axios.create({
-    baseURL: "http://localhost:9000",
-//    baseURL: "https://mycv.atkev.site",
+//    baseURL: "http://localhost:9000",
+    baseURL: "https://mycv.atkev.site",
 });
 
 instance.interceptors.request.use(

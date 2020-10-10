@@ -3,6 +3,7 @@ import NotificationService from "../../standalone/NotificationService";
 import DirectoryForm from "../../form/edit/DirectoryForm";
 import ArrowRight from "@material-ui/icons/ArrowRight";
 import styles from "./editdirectorypage.module.scss";
+import axios from "../../../axios/Axios";
 import { compose } from "redux";
 
 class EditDirectoryPage extends Component {
@@ -10,12 +11,15 @@ class EditDirectoryPage extends Component {
     super();
     this.state = {
       directoriesBuilder: [],
+      files: [],
       mainDirRef: null
     };
-    this.notif = React.createRef();
+    this.notif = null;
     this.mainDirRef = null;
   }
-  componentDidMount = () => { };
+  componentDidMount = () => {
+    this.fetchFiles();
+  };
   addDirRef = element => {
     this.setState({ mainDirRef: element });
   };
@@ -23,6 +27,23 @@ class EditDirectoryPage extends Component {
     if (this.state.mainDirRef) {
       const composedDirs = this.state.mainDirRef.compose();
     }
+  }
+  fetchFiles = () => {
+    axios
+      .get("/api/files")
+      .then((res) => {
+        console.log("Files", res.data)
+        this.setState({ files: res.data });
+      })
+      .catch((err) => {
+        let errmsg = "error";
+        try {
+          errmsg = err.response.data.error;
+        } catch {
+        } finally {
+          this.notif.display(errmsg, "danger");
+        }
+      });
   }
   render() {
     const allFile = [
@@ -33,9 +54,13 @@ class EditDirectoryPage extends Component {
     ]
     return (
       <React.Fragment>
-        <NotificationService ref={this.notif} />
+        <NotificationService
+          ref={(element) => {
+            if (element !== null) this.notif = element;
+          }}
+        />
         <div className={`${styles.root} col-12 col-md-10 mx-auto`}>
-          <DirectoryForm ref={this.addDirRef} allFiles={allFile} />
+          <DirectoryForm ref={this.addDirRef} allFiles={this.state.files} />
           <div className="text-center my-3">
             <button className={styles.button} onClick={this.composeDir}>
               <p>Submit</p> <ArrowRight />

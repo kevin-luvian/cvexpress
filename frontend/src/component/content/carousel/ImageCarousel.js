@@ -6,28 +6,39 @@ class ImageCarousel extends Component {
     constructor(props) {
         super();
     }
+    displayLength = () => {
+        if (this.props.displays.length > 3)
+            return 3;
+        return this.props.displays.length;
+    }
+    handleClick = obj => {
+        console.log(`Clicked ${obj.filename}`);
+    }
     render() {
         const settings = {
-            dots: true,
-            infinite: true,
-            slidesToShow: 3,
-            slidesToScroll: 1,
-            swipeToSlide: true,
-            autoplay: true,
-            autoplaySpeed: 3000,
-            pauseOnHover: true,
         };
         const items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         return (
             <React.Fragment>
-                <Slider {...settings}>
-                    {items.map((item, index) => {
-                        return (
-                            <div key={index} className={styles.imageItem}>
-                                <h3>{item}</h3>
-                            </div>
-                        );
-                    })}
+                <Slider
+                    dots={true}
+                    infinite={this.props.displays.length > 0}
+                    speed={500}
+                    slidesToShow={this.displayLength()}
+                    slidesToScroll={3}
+                    pauseOnHover={true}
+                    autoplay={true}
+                    autoplaySpeed={3000}
+                >
+                    {this.props.displays.map((elem, index) => (
+                        <div
+                            key={index}
+                            className={styles.imageItem}
+                            onClick={() => { this.handleClick(elem) }}
+                        >
+                            <img src={elem.url} />
+                        </div>
+                    ))}
                 </Slider>
             </React.Fragment>
         );

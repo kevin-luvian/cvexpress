@@ -106,7 +106,7 @@ class DirectoryForm extends Component {
                         }
                     </div>
                     <div className="mt-3">
-                        <ImageCarousel />
+                        <ImageCarousel displays={this.state.displays} />
                     </div>
                     <div className={`mt-4 ${styles.inputContainer}`}>
                         <Autocomplete
@@ -114,7 +114,12 @@ class DirectoryForm extends Component {
                             disableCloseOnSelect
                             className={`mt-3 ${styles.input}`}
                             options={this.props.allFiles}
-                            getOptionLabel={(option) => option.title}
+                            value={this.state.displays}
+                            onChange={(event, values) => {
+                                console.log(this.state.displays);
+                                this.setState({ displays: values });
+                            }}
+                            getOptionLabel={(option) => option.filename}
                             renderOption={(option, { selected }) => (
                                 <React.Fragment>
                                     <Checkbox
@@ -124,7 +129,7 @@ class DirectoryForm extends Component {
                                         checked={selected}
                                     />
                                     <div className="row w-100 m-0">
-                                        <div className="col">{option.title}</div>
+                                        <div className="col">{option.filename}</div>
                                         <div className="col text-right my-auto">{toMb(option.size)} Mb</div>
                                     </div>
                                 </React.Fragment>

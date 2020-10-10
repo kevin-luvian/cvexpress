@@ -16,8 +16,13 @@ class DescriptionForm extends Component {
       selectedCV: null,
       files: [],
     };
-    this.notif = React.createRef();
+    this.notif = null;
   }
+  addNotif = element => {
+    if (element !== null) {
+      this.notif = element;
+    };
+  };
   componentDidMount = () => {
     this.fetchFileMetadatas();
     this.fetchDescription();
@@ -35,7 +40,7 @@ class DescriptionForm extends Component {
           errmsg = err.response.data.message;
         } catch {
         } finally {
-          this.notif.current.display(errmsg, "danger");
+          this.notif.display(errmsg, "danger");
         }
       });
   };
@@ -57,7 +62,7 @@ class DescriptionForm extends Component {
           errmsg = err.response.data.message;
         } catch {
         } finally {
-          this.notif.current.display(errmsg, "danger");
+          this.notif.display(errmsg, "danger");
         }
       });
   };
@@ -72,7 +77,7 @@ class DescriptionForm extends Component {
       .post("/api/description", data)
       .then(() => {
         this.fetchDescription();
-        this.notif.current.display("description data updated", "success");
+        this.notif.display("description data updated", "success");
       })
       .catch((err) => {
         let errmsg = "error";
@@ -80,14 +85,14 @@ class DescriptionForm extends Component {
           errmsg = err.response.data.message;
         } catch {
         } finally {
-          this.notif.current.display(errmsg, "danger");
+          this.notif.display(errmsg, "danger");
         }
       });
   };
   render() {
     return (
       <React.Fragment>
-        <NotificationService ref={this.notif} />
+        <NotificationService ref={this.addNotif} />
         <div className={styles.root}>
           <TextField
             className={styles.input}
@@ -112,30 +117,26 @@ class DescriptionForm extends Component {
             select
             label="Select Image"
             className={styles.input}
-            value={this.state.selectedImage}
+            value={this.state.selectedImage || ""}
             onChange={(e) => {
               this.setState({ selectedImage: e.target.value });
             }}
           >
-            {this.state.files.map((file) => (
-              <MenuItem key={file._id} value={file._id}>
-                {file.filename}
-              </MenuItem>
+            {this.state.files.map((file, index) => (
+              <MenuItem key={index} value={file._id}>{file.filename}</MenuItem>
             ))}
           </TextField>
           <TextField
             select
             label="Select CV"
             className={styles.input}
-            value={this.state.selectedCV}
+            value={this.state.selectedCV || ""}
             onChange={(e) => {
               this.setState({ selectedCV: e.target.value });
             }}
           >
-            {this.state.files.map((file) => (
-              <MenuItem key={file._id} value={file._id}>
-                {file.filename}
-              </MenuItem>
+            {this.state.files.map((file, index) => (
+              <MenuItem key={index} value={file._id}>{file.filename}</MenuItem>
             ))}
           </TextField>
           <div className="text-center">
