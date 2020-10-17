@@ -5,43 +5,34 @@ import ArrowRight from "@material-ui/icons/ArrowRight";
 import styles from "./directorypage.module.scss";
 import axios from "../../../axios/Axios";
 
-class EditDirectoryPage extends Component {
+class AddDirectoryPage extends Component {
   constructor(props) {
     super();
     this.state = {
       files: [],
       mainDirRef: null,
-      mainDir: null
+      mainDir: { main: true }
     };
     this.notif = null;
   };
   componentDidMount = () => {
     this.fetchFiles();
-    this.fetchDirectory();
   };
   addDirRef = element => {
     this.setState({ mainDirRef: element });
   };
   composeDir = () => {
-    if (this.state.mainDirRef) {
-      const composedDirs = this.state.mainDirRef.compose(true);
-      console.log("Composed Dirs Final", composedDirs);
-      this.updateDirectory(composedDirs);
-    }
+    if (this.state.mainDirRef)
+      this.postDirectories(this.state.mainDirRef.compose(true));
   }
   updateMainDir = () => {
-    console.log("Try updating main dir");
-    if (this.state.mainDirRef) {
-      const composedDirs = this.state.mainDirRef.compose();
-      console.log("Final Composed", composedDirs);
-      this.setState({ mainDir: composedDirs });
-    }
+    if (this.state.mainDirRef)
+      this.setState({ mainDir: this.state.mainDirRef.compose() });
   }
   fetchFiles = () => {
     axios
       .get("/api/files")
       .then((res) => {
-        console.log("Files", res.data)
         this.setState({ files: res.data });
       })
       .catch((err) => {
@@ -54,40 +45,22 @@ class EditDirectoryPage extends Component {
         }
       });
   }
-  fetchDirectory = () => {
+  postDirectories = (data) => {
     axios
-      .get(`/api/directories/${this.props.match.params.slug}`)
-      .then((res) => {
-        console.log("Directory Data", res.data);
-        this.setState({ mainDir: res.data });
+      .post("/api/directories", data)
+      .then(() => {
+        this.notif.display("directories data created", "success");
       })
       .catch((err) => {
         let errmsg = "error";
         try {
-          errmsg = err.response.data.error;
+          errmsg = err.response.data.message;
         } catch {
         } finally {
           this.notif.display(errmsg, "danger");
         }
       });
-  }
-  updateDirectory = data => {
-    axios
-      .put('/api/directories', data)
-      .then((res) => {
-        console.log("Updated Directory Data", res.data);
-        this.notif.display("Directory data updated", "success");
-      })
-      .catch((err) => {
-        let errmsg = "error";
-        try {
-          errmsg = err.response.data.error;
-        } catch {
-        } finally {
-          this.notif.display(errmsg, "danger");
-        }
-      });
-  }
+  };
   render() {
     return (
       <React.Fragment>
@@ -112,4 +85,4 @@ class EditDirectoryPage extends Component {
     );
   }
 }
-export default EditDirectoryPage;
+export default AddDirectoryPage;

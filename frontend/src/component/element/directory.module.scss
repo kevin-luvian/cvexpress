@@ -1,0 +1,110 @@
+@import "../../style/theme.scss";
+@import "../../style/variables.scss";
+@import "../../style/responsive.scss";
+
+.cardRoot {
+  @include themify($themes) {
+    border: 1px solid themed("muteColor");
+  }
+  border-radius: 1rem !important;
+}
+
+.cardTitle {
+  font-size: 1.2rem !important;
+}
+
+.cardSubHeader {
+  font-size: 0.9rem !important;
+}
+
+.option {
+  position: absolute;
+  z-index: 1;
+  background-color: white;
+  padding: 0.8rem 0.5rem;
+  border-radius: 0.5rem;
+  box-shadow: $tight-shadow;
+  transition: $basic-transition;
+  p {
+    cursor: pointer;
+    font-size: 14px;
+    margin: 0.2rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.8rem;
+    transition: $fast-transition;
+    @include themify($themes) {
+      color: themed("textColor");
+    }
+    &:last-child {
+      margin-bottom: 0px;
+    }
+    &:hover {
+      box-shadow: $tight-shadow;
+      @include themify($themes) {
+        color: themed("buttonText");
+      }
+    }
+  }
+}
+
+.optionEditLink {
+  text-decoration: none !important;
+}
+
+.optionEdit {
+  &:hover {
+    @include themify($themes) {
+      background-color: themed("buttonWarning");
+    }
+  }
+}
+
+.optionDelete {
+  &:hover {
+    @include themify($themes) {
+      background-color: themed("buttonDanger");
+    }
+  }
+}
+
+.showMore {
+  display: flex;
+  cursor: pointer;
+  text-decoration: none !important;
+  padding: 0.3rem;
+  padding-left: 0.8rem;
+  margin-left: auto;
+  transition: $fast-transition;
+  border-radius: 1rem;
+  @include themify($themes) {
+    color: themed("textColor");
+  }
+  &:hover {
+    box-shadow: $tight-shadow;
+    @include themify($themes) {
+      color: themed("buttonText");
+      background-color: themed("buttonColor");
+    }
+  }
+}
+
+.showMoreDescContainer {
+  overflow: hidden;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.showMoreDesc {
+  transform: translateX(80px);
+  font-size: 0.9rem;
+  margin: 0px;
+  transition: $fast-transition !important;
+  @include themify($themes) {
+    color: themed("buttonText");
+  }
+}
+
+.showMoreButton {
+  margin: 0px !important;
+  transition: $fast-transition !important;
+}

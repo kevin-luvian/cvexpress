@@ -30,18 +30,15 @@ class EditDirectoryPage extends Component {
     }
   }
   updateMainDir = () => {
-    console.log("Try updating main dir");
     if (this.state.mainDirRef) {
       const composedDirs = this.state.mainDirRef.compose();
-      console.log("Final Composed", composedDirs);
-      this.setState({ mainDir: composedDirs });
+      this.setState({ mainDir: composedDirs }, this.forceUpdate);
     }
   }
   fetchFiles = () => {
     axios
       .get("/api/files")
       .then((res) => {
-        console.log("Files", res.data)
         this.setState({ files: res.data });
       })
       .catch((err) => {

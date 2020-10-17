@@ -6,7 +6,10 @@ import ResumePage from "../page/resume/ResumePage";
 import UploadPage from "../page/upload/UploadPage";
 import EditPage from "../page/edit/EditPage";
 import EditResumePage from "../page/editResume/EditResumePage";
+import AddDirectoryPage from "../page/editDirectory/AddDirectoryPage";
 import EditDirectoryPage from "../page/editDirectory/EditDirectoryPage";
+import DirectoriesPage from "../page/directories/DirectoriesPage";
+import DirectoryViewPage from "../page/directories/DirectoryViewPage";
 import LoginPage from "../page/login/LoginPage";
 import Error404Page from "../page/error/Error404Page";
 import clearStore from "../../redux/actions/ClearStoreTempAction";
@@ -58,7 +61,11 @@ class MenuRouter extends Component {
           <ProtectedRoute path="/upload" component={UploadPage} />
           <ProtectedRoute path="/edit" exact component={EditPage} />
           <ProtectedRoute path="/edit/resume" component={EditResumePage} />
-          <NavRoute path="/edit/directory" component={EditDirectoryPage} />
+          <ProtectedRoute path="/edit/directories/:slug" component={EditDirectoryPage} />
+          <ProtectedRoute path="/edit/directories" component={DirectoriesPage} />
+          <ProtectedRoute path="/add/directories" component={AddDirectoryPage} />
+          <NavRoute path="/directories/:slug" component={DirectoryViewPage} />
+          <NavRoute path="/directories" component={DirectoriesPage} />
           <Route path="/login">
             <LoginPage />
           </Route>
@@ -69,13 +76,10 @@ class MenuRouter extends Component {
     );
   }
 }
-
 const mapStateToProps = (state) => ({
   ...state,
 });
-
 const mapDispatchToProps = (dispatch) => ({
   clearStore: () => dispatch(clearStore()),
 });
-
 export default connect(mapStateToProps, mapDispatchToProps)(MenuRouter);

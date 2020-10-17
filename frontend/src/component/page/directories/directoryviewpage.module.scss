@@ -1,0 +1,127 @@
+@import "../../../style/theme.scss";
+@import "../../../style/variables.scss";
+@import "../../../style/responsive.scss";
+
+.root {
+  padding: 0 2rem !important;
+  margin-top: 2rem;
+  @include media(desktop) {
+    margin-top: 0;
+    padding: 0 !important;
+  }
+}
+
+$size: 150px;
+.loader {
+  & > div {
+    position: absolute;
+    width: $size;
+    height: $size;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    div {
+      width: $size;
+      height: $size;
+      @include themify($themes) {
+        border-color: themed("rootColor");
+      }
+    }
+  }
+}
+
+$calcMobile: calc(100vh - (57.59px + 68px));
+$calcDesktop: calc(100vh - (93px + 68px + 3.5rem));
+.fill {
+  position: relative !important;
+  height: $calcMobile !important;
+  @include media(desktop) {
+    height: $calcDesktop !important;
+  }
+}
+
+.viewMoreButton {
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 10px;
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease-in-out;
+  @include themify($themes) {
+    background-color: themed("buttonColor");
+    color: themed("buttonText");
+    &:hover {
+      box-shadow: $tight-shadow;
+      background-color: themed("buttonHover");
+    }
+  }
+  svg {
+    display: inline;
+    text-align: center;
+    margin: auto;
+  }
+  @include media(desktop) {
+    display: none;
+  }
+}
+
+.navigation {
+  z-index: 1;
+  position: absolute !important;
+  transition: $basic-transition;
+  top: 0px;
+  left: 0px;
+  transform: translateY(calc(100vh - 55px));
+  @include media(desktop) {
+    position: relative !important;
+    transform: none !important;
+  }
+}
+
+.navcontainer {
+  padding: 0.5rem;
+  margin-bottom: 15px;
+  overflow-y: scroll;
+  background-color: rgba(236, 236, 236, 0.3);
+  @include media(desktop) {
+    height: fit-content !important;
+    overflow-y: visible;
+    margin-bottom: 0px;
+    padding: 0.4rem;
+    background-color: rgba(236, 236, 236, 0);
+    @include themify($themes) {
+      border: 3px solid themed("muteColor");
+    }
+  }
+}
+
+.navulist {
+  margin-bottom: 0;
+  list-style: none;
+}
+
+.navlist {
+  p {
+    cursor: pointer;
+    border-radius: 0.2rem;
+    background-color: white;
+    padding: 10px;
+    margin-bottom: 0rem;
+    box-shadow: $smooth-shadow;
+    &:hover {
+      @include themify($themes) {
+        background-color: themed("rootColor");
+        color: themed("buttonText");
+      }
+    }
+    @include media(desktop) {
+      font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+      box-shadow: none;
+      border: none;
+      padding: 0.3rem;
+      @include themify($themes) {
+        color: themed("textColor");
+      }
+    }
+  }
+}

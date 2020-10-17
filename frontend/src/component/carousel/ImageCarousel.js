@@ -6,6 +6,9 @@ class ImageCarousel extends Component {
     constructor(props) {
         super();
     }
+    createID = (str_param, category) => {
+        return `id-${category}-${str_param}`
+    }
     displayLength = () => {
         if (this.props.displays.length > 3)
             return 3;
@@ -15,9 +18,6 @@ class ImageCarousel extends Component {
         console.log(`Clicked ${obj.filename}`);
     }
     render() {
-        const settings = {
-        };
-        const items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         return (
             <React.Fragment>
                 <Slider
@@ -26,9 +26,11 @@ class ImageCarousel extends Component {
                     speed={500}
                     slidesToShow={this.displayLength()}
                     slidesToScroll={3}
+                    swipeToSlide={true}
                     pauseOnHover={true}
                     autoplay={true}
                     autoplaySpeed={3000}
+                    adaptiveHeight={false}
                 >
                     {this.props.displays.map((elem, index) => (
                         <div

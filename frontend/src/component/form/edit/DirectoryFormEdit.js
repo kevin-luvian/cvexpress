@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import NotificationService from "../../standalone/NotificationService";
 import {
     TextField,
     Checkbox,
@@ -24,43 +23,70 @@ import {
     KeyboardDatePicker,
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
-import axios from "../../../axios/Axios";
 
-class DirectoryForm extends Component {
+class DirectoryFormEdit extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            _id: "",
             displays: [],
             title: "",
             description: "",
             order: 0,
             date: new Date(),
             show: true,
-            childDirectories: [],
-            childAssignedIDs: []
+            sectionsRef: [],
+            sections: []
         };
-        this.notif = React.createRef();
+    } componentDidMount = () => {
+        if (this.props.directory)
+            this.setState(this.getDirectoryObject());
     }
-    compose = () => {
+    componentDidUpdate = (prevProps, prevState, snapshot) => {
+        if (this.props.directory !== prevProps.directory)
+            this.setState(this.getDirectoryObject());
+    }
+    getDirectoryObject = emptyDir => {
+        if (emptyDir)
+            return {
+                _id: randId(),
+                displays: [],
+                title: "",
+                description: "",
+                order: 0,
+                show: true,
+                sections: []
+            }
+        return {
+            _id: this.props.directory._id || randId(),
+            displays: this.props.directory.displays || [],
+            title: this.props.directory.title || "",
+            description: this.props.directory.description || "",
+            order: this.props.directory.order || 0,
+            show: this.props.directory.show || true,
+            sections: this.props.directory.sections || []
+        }
+    }
+    compose = composeDisplay => {
         const composedDirs = [];
-        this.state.childDirectories.forEach((directory) => {
-            if (directory !== null) {
-                composedDirs.push(directory.compose());
+        this.state.sectionsRef.forEach((ref) => {
+            if (ref !== null) {
+                composedDirs.push(ref.compose(composeDisplay));
             }
         })
         const thisDirObj = {
-            displays: this.getDisplaysID(),
+            _id: this.state._id,
+            displays: composeDisplay ? this.getDisplaysID() : this.state.displays,
             title: this.state.title,
             description: this.state.description,
             order: parseInt(this.state.order),
             sections: composedDirs
         }
-        if (!this.props.assignedID) {
+        if (this.props.directory.main) {
             thisDirObj["main"] = true;
             thisDirObj["date"] = this.state.date;
             thisDirObj["show"] = this.state.show;
         }
-        console.log("Composed Obj", thisDirObj)
         return thisDirObj;
     }
     getDisplaysID = () => {
@@ -70,50 +96,51 @@ class DirectoryForm extends Component {
         });
         return displaysID
     }
-    onDelete = assignedID => {
-        const childAssignedIDs = this.state.childAssignedIDs;
-        const childDirectories = this.state.childDirectories;
-        const index = childAssignedIDs.indexOf(assignedID);
-        if (index > -1) {
-            childAssignedIDs.splice(index, 1);
-            childDirectories[index].clearChildDirs();
-            childDirectories.splice(index, 1);
+    getDirectoryIndexByID = id => {
+        const sections = this.state.sections;
+        for (let i = 0; i < sections.length; i++) {
+            if (sections[i]._id == id) return i;
+        }
+        return -1;
+    }
+    onDelete = directory => {
+        const sections = this.state.sections;
+        const sectionsRef = this.state.sectionsRef;
+        for (let i = 0; i < sections.length; i++) {
+            if (sections[i]._id == directory._id) {
+                sections.splice(i, 1);
+                sectionsRef.splice(i, 1);
+                break;
+            }
         }
         this.setState({
-            childAssignedIDs: childAssignedIDs,
-            childDirectories: childDirectories
-        });
+            sections: sections,
+            sectionsRef: sections.length == 0 ? [] : sectionsRef
+        }, this.props.updateMainDir);
     }
-    clearChildDirs = () => {
-        this.state.childDirectories.forEach(directory => {
-            directory.clearChildDirs();
-        });
-        this.setState({
-            childAssignedIDs: [],
-            childDirectories: []
-        });
-    }
-    createDir = () => {
-        this.setState({ childAssignedIDs: [...this.state.childAssignedIDs, randId()] });
-    };
-    addChildRef = element => {
+    addSectionRef = element => {
         if (element !== null) {
-            const childDirectories = this.state.childDirectories;
-            childDirectories.push(element);
-            this.setState({ childDirectories: childDirectories });
+            const sectionsRef = this.state.sectionsRef;
+            sectionsRef.push(element);
+            this.setState({ sectionsRef: sectionsRef });
         }
     };
+    createNewSection = () => {
+        const obj = this.getDirectoryObject(true);
+        const sections = this.state.sections;
+        sections.push(obj);
+        this.setState({ sections: sections });
+    }
     render() {
         return (
             <React.Fragment>
-                <NotificationService ref={this.notif} />
                 <div className={styles.container}>
                     <div className={styles.header}>
                         {this.state.title || "New Directory"}
-                        {this.props.assignedID &&
+                        {this.props.directory && !this.props.directory.main &&
                             <HighlightOff
                                 className={stylesPrimary.deleteIcon}
-                                onClick={() => { this.props.onDelete(this.props.assignedID) }} />
+                                onClick={() => { this.props.onDelete(this.state) }} />
                         }
                     </div>
                     <div className="mt-3">
@@ -173,9 +200,9 @@ class DirectoryForm extends Component {
                                         this.setState({ order: e.target.value });
                                     }} />
                             </div>
-                            {!this.props.assignedID &&
+                            {this.props.directory && this.props.directory.main &&
                                 <React.Fragment>
-                                    <div className="col-12 col-md-4">
+                                    <div className="col-12 col-sm-4">
                                         <FormControl className={styles.input}>
                                             <InputLabel>Show</InputLabel>
                                             <Select
@@ -188,7 +215,7 @@ class DirectoryForm extends Component {
                                             </Select>
                                         </FormControl>
                                     </div>
-                                    <div className="col-12 col-md-4">
+                                    <div className="col-12 col-sm-4">
                                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                             <KeyboardDatePicker
                                                 disableToolbar
@@ -208,17 +235,18 @@ class DirectoryForm extends Component {
                                 </React.Fragment>
                             }
                         </div>
-                        {this.state.childAssignedIDs.map((childIDs, index) =>
-                            <DirectoryForm
+                        {this.state.sections.map((data, index) =>
+                            <DirectoryFormEdit
                                 key={index}
-                                ref={this.addChildRef}
+                                ref={this.addSectionRef}
+                                updateMainDir={() => { this.props.updateMainDir(); }}
                                 allFiles={this.props.allFiles}
-                                assignedID={childIDs}
+                                directory={data}
                                 onDelete={this.onDelete} />
                         )}
                         <div className="text-center mt-3">
-                            <button className={styles.button} onClick={this.createDir}>
-                                <p>Add {this.state.title} Child</p> <AddToPhotos />
+                            <button className={styles.button} onClick={this.createNewSection}>
+                                <p>Add {this.state.title} Section</p> <AddToPhotos />
                             </button>
                         </div>
                     </div>
@@ -228,4 +256,4 @@ class DirectoryForm extends Component {
     }
 }
 
-export default DirectoryForm;
+export default DirectoryFormEdit;

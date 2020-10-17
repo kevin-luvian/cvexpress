@@ -11,12 +11,26 @@ import $ from "jquery";
 const normalLinks = [
   { menu: "Home", url: "/", submenu: [] },
   { menu: "Resume", url: "/resume", submenu: [] },
-  { menu: "Edit Directories", url: "/edit/directory", submenu: [] },
+  { menu: "Projects", url: "/directories", submenu: [] },
   { menu: "Login", url: "/login", submenu: [] },
 ];
 const protectedLinks = [
   { menu: "Home", url: "/", submenu: [] },
   { menu: "Resume", url: "/resume", submenu: [] },
+  {
+    menu: "Projects",
+    url: "/directories",
+    submenu: [
+      {
+        menu: "View All",
+        url: "/edit/directories",
+      },
+      {
+        menu: "Add Directories",
+        url: "/add/directories",
+      },
+    ]
+  },
   {
     menu: "Config",
     url: "",
@@ -32,11 +46,7 @@ const protectedLinks = [
       {
         menu: "Edit Resumes",
         url: "/edit/resume",
-      },
-      {
-        menu: "Edit Directories",
-        url: "/edit/directory",
-      },
+      }
     ],
   },
   { menu: "Logout", url: "/logout", submenu: [] },
@@ -68,8 +78,8 @@ class Navbar extends Component {
     }
     this.setState({ open: !this.state.open });
   };
-  fetchInfo = () => {
-    axios
+  fetchInfo = async () => {
+    await axios
       .get("/api/myinfo")
       .then((res) => {
         this.setState({ fullName: res.data.fullname.split(" ") });

@@ -16,7 +16,7 @@ class MainTemplate extends Component {
     return (
       <div className={this.chooseTheme()}>
         <div className={styles.root}>
-          <div id="rootContainer" className={styles.container}>
+          <div className={styles.container}>
             <Navbar />
             <div className={styles.containerContent}>{this.props.children}</div>
             <div className={styles.footer}>
