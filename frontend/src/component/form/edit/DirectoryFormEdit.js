@@ -38,7 +38,8 @@ class DirectoryFormEdit extends Component {
             sectionsRef: [],
             sections: []
         };
-    } componentDidMount = () => {
+    } 
+    componentDidMount = () => {
         if (this.props.directory)
             this.setState(this.getDirectoryObject());
     }

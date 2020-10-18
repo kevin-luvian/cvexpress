@@ -67,7 +67,7 @@ $calcDesktop: calc(100vh - (93px + 68px + 3.5rem));
 
 .navigation {
   z-index: 1;
-  position: absolute !important;
+  position: fixed !important;
   transition: $basic-transition;
   top: 0px;
   left: 0px;

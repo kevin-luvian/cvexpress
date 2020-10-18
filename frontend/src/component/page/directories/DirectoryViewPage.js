@@ -1,17 +1,19 @@
 import React, { Component } from "react";
 import { KeyboardArrowUp, KeyboardArrowDown } from '@material-ui/icons';
 import PuffLoader from "react-spinners/PuffLoader";
+import DirectoryContent from "../../content/Directory";
 import axios from "../../../axios/Axios";
 import styles from "./directoryviewpage.module.scss";
 import $ from "jquery";
 
-class DirectoriesPage extends Component {
+class DirectoryViewPage extends Component {
     constructor(props) {
         super();
         this.state = {
             loading: true,
             navopen: false,
-            directory: {}
+            directory: {},
+            directoryDisplay: {}
         };
     }
     componentDidMount = () => {
@@ -22,9 +24,12 @@ class DirectoriesPage extends Component {
             .get(`/api/directories/${this.props.match.params.slug}`)
             .then((res) => {
                 console.log("Directory Data", res.data);
+                const directoryDisplay = res.data.sections[0] == undefined ?
+                    {} : res.data.sections[0];
                 this.setState({
                     loading: false,
-                    directory: res.data
+                    directory: res.data,
+                    directoryDisplay: directoryDisplay
                 });
             })
             .catch((err) => {
@@ -61,6 +66,11 @@ class DirectoriesPage extends Component {
         }
         this.setState({ navopen: !this.state.navopen })
     }
+    getMainDisplays = () => {
+        return this.state.directory.displays ?
+            this.state.directory.displays :
+            [];
+    }
     render() {
         return (
             <React.Fragment>
@@ -92,8 +102,10 @@ class DirectoriesPage extends Component {
                                 </ul>
                             </div>
                         </div>
-                        <div className="col bg-primary">
-                            <p>blue</p>
+                        <div className="col">
+                            <DirectoryContent
+                                mainDisplays={this.getMainDisplays()}
+                                directory={this.state.directoryDisplay} />
                         </div>
                     </div>
                 </div>
@@ -101,4 +113,4 @@ class DirectoriesPage extends Component {
         );
     }
 }
-export default DirectoriesPage;
+export default DirectoryViewPage;
