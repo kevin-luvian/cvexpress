@@ -21,45 +21,37 @@ router.post('/', tokenAuth, async (req, res, next) => {
 });
 
 /* GET unblocked directories */
-router.get('/unblocked', tokenAuth, (req, res) => {
-  Directory.find({ main: true }).lean().exec(async (err, obj_arr) => {
-    if (err) {
-      const errMessage = process.env.NODE_ENV == "development" ?
-        err : "retireving directory failed";
-      return res.status(400).json({ error: errMessage });
-    }
-    const obj_parsed = [];
-    for (let i = 0; i < obj_arr.length; i++) {
-      obj_arr[i].displays = await DirectoryService.changeDisplayIDsToFile(
-        obj_arr[i].displays,
-        `http://${req.headers.host}/api/files`
-      );
-      obj_parsed.push(obj_arr[i]);
-    }
-    res.json(obj_parsed);
-  });
-});
+// router.get('/unblocked', tokenAuth, (req, res) => {
+//   Directory.find({ main: true }).lean().exec(async (err, obj_arr) => {
+//     if (err) {
+//       const errMessage = process.env.NODE_ENV == "development" ?
+//         err : "retireving directory failed";
+//       return res.status(400).json({ error: errMessage });
+//     }
+//     const obj_parsed = [];
+//     for (let i = 0; i < obj_arr.length; i++) {
+//       obj_arr[i].displays = await DirectoryService.changeDisplayIDsToFile(
+//         obj_arr[i].displays,
+//         `http://${req.headers.host}/api/files`
+//       );
+//       obj_parsed.push(obj_arr[i]);
+//     }
+//     res.json(obj_parsed);
+//   });
+// });
 
 /* GET directory by ID */
 router.get('/:id', async (req, res) => {
-  const id_param = req.params.id;
-  Directory.findById(id_param).lean().exec(async (err, directory) => {
-    try {
-      if (err || directory == null || directory.length == 0)
-        throw (err || "null");
-      if (directory.main && directory.show) {
-        const base_url = `http://${req.headers.host}/api/files`;
-        res.json(await DirectoryService.fetchDirectories(id_param, base_url));
-      }
-      else
-        throw "null";
-    } catch (err) {
-      console.log(` [error] ${err}`);
-      const errMessage = process.env.NODE_ENV == "development" ?
-        err : "error getting directory";
-      return res.status(400).json({ error: errMessage });
-    }
-  });
+  let id_param = req.params.id;
+  const base_url = `http://${req.headers.host}/api/files`;
+  await DirectoryService.fetchDirectories(id_param, base_url)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      console.log(` [error getting directory by id${id_param}] ${err}`);
+      res.status(400).json({ error: "error getting directory" });
+    });
 });
 
 /* GET directories */
@@ -91,8 +83,10 @@ router.put('/', tokenAuth, async (req, res) => {
     main: req.body.main,
     sections: req.body.sections,
   };
-  DirectoryService.filterAndDeleteDirectories(obj_info);
-  DirectoryService.updateDirectories(obj_info);
+  const temp = await DirectoryService.parseDirectoryToDirectories(obj_info);
+  const directories = temp[1];
+  // console.log("Directories parsed", directories);
+  DirectoryService.updateDirectories(directories);
   res.send("directories updated");
 });
 

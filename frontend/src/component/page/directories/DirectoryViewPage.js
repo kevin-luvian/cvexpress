@@ -42,14 +42,25 @@ class DirectoryViewPage extends Component {
                 }
             });
     }
-    renderNav = (obj, index, paddingleft) => {
+    handleNavClick = (obj) => {
+        // console.log("Clicked", obj.title, obj);
+        this.setState({ directoryDisplay: obj });
+        $('.navItem').removeClass(styles.navItemActive);
+        $(`#${obj._id}`).addClass(styles.navItemActive);
+    }
+    renderNav = (obj, index, paddingleft, main = true) => {
         return (
             <li key={index} className={styles.navlist}>
-                <p style={{ paddingLeft: `${paddingleft}px` }}>{obj.title}</p>
+                <p id={obj._id}
+                    className={`navItem ${main && 0 === index ? styles.navItemActive : ""}`}
+                    style={{ paddingLeft: `${paddingleft}px` }}
+                    onClick={() => this.handleNavClick(obj)}>
+                    {obj.title}
+                </p>
                 {obj.sections.length > 0 &&
                     <ul className={styles.navulist}>
                         {obj.sections.map((item, index) => (
-                            this.renderNav(item, index, paddingleft + 15)
+                            this.renderNav(item, index, paddingleft + 15, false)
                         ))}
                     </ul>
                 }
@@ -84,6 +95,11 @@ class DirectoryViewPage extends Component {
                     className={`${styles.root} mx-auto ${this.state.loading ? "d-none" : "d-block"}`}
                 >
                     <div className="row px-3">
+                        <div className={`${styles.contentContainer} col`}>
+                            <DirectoryContent
+                                mainDisplays={this.getMainDisplays()}
+                                directory={this.state.directoryDisplay} />
+                        </div>
                         <div className={`${styles.navigation} col-12 col-md-4 col-lg-3`}>
                             <button
                                 className={styles.viewMoreButton}
@@ -101,11 +117,6 @@ class DirectoryViewPage extends Component {
                                     }
                                 </ul>
                             </div>
-                        </div>
-                        <div className="col">
-                            <DirectoryContent
-                                mainDisplays={this.getMainDisplays()}
-                                directory={this.state.directoryDisplay} />
                         </div>
                     </div>
                 </div>

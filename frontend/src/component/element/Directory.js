@@ -117,7 +117,7 @@ class Directory extends Component {
                     <CardMedia
                         component="img"
                         height="240"
-                        src={this.props.directory.displays ? this.props.directory.displays[0].url : ""}
+                        src={this.props.directory.displays[0] ? this.props.directory.displays[0].url : ""}
                     />
                     <CardContent>
                         <Typography

@@ -29,7 +29,7 @@
   border-radius: 1000px;
   border: 18px solid #fff;
   overflow: hidden;
-  box-shadow: $super-smooth-shadow;
+  box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.3);
   @include media(tablet) {
     width: 45vw;
     height: 45vw;

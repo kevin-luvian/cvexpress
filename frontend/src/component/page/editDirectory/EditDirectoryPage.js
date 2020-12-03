@@ -64,7 +64,7 @@ class EditDirectoryPage extends Component {
       .catch((err) => {
         let errmsg = "error";
         try {
-          errmsg = err.response.data.error;
+          errmsg = err.response.data.error+"";
         } catch {
         } finally {
           this.notif.display(errmsg, "danger");

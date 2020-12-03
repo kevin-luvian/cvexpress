@@ -7,47 +7,59 @@ const changeDisplayIDsToFile = async (dir_displays, base_url) => {
         const file_arr = [];
         for (let i = 0; i < dir_displays.length; i++) {
             const file_id = dir_displays[i];
-            const file_obj = await new Promise((resolve, reject) => {
-                FileMetadata.findById(file_id).lean().exec((err, obj) => {
-                    if (err || obj == null || obj.length == 0) {
-                        console.log(` [error] ${err}`);
-                        const errMessage = process.env.NODE_ENV == "development" ?
-                            err : "retireving file failed";
-                        reject(errMessage);
-                    }
-                    obj["url"] = `${base_url}/${obj._id}/${obj.filename.replace(/\s+/g, "%20")}`;
-                    resolve(obj);
+            await getFileLeanById(file_id)
+                .then(file_obj => {
+                    file_obj["url"] = `${base_url}/${file_id}/${file_obj.filename.replace(/\s+/g, "%20")}`;
+                    file_arr.push(file_obj);
+                })
+                .catch(err => {
+                    console.log(` [error fetching file] ${err}`);
                 });
-            });
-            file_arr.push(file_obj);
         }
         resolve(file_arr);
     });
 }
-const fetchDirectories = async (directory_id, base_url) => {
+const getFileLeanById = file_id => {
     return new Promise((resolve, reject) => {
-        Directory.findById(directory_id).lean().exec(async (err, directory) => {
-            if (err || directory == null || directory.length == 0) {
-                console.log(` [error] ${err}`);
-                const errMessage = process.env.NODE_ENV == "development" ?
-                    err : "retireving skill failed";
-                return reject(errMessage);
-            }
-            if ((directory.displays ? directory.displays.length : 0) > 0) {
-                directory.displays = await changeDisplayIDsToFile(directory.displays, base_url);
-            }
-            const sectionLength = directory.sections ? directory.sections.length : 0;
-            if (sectionLength > 0) {
-                const savedSections = [];
-                for (let i = 0; i < sectionLength; i++) {
-                    const section = await fetchDirectories(directory.sections[i], base_url);
-                    savedSections.push(section);
-                }
-                directory.sections = savedSections;
-            }
-            resolve(directory);
-        });
+        FileMetadata.findById(file_id).lean()
+            .then(file => resolve(file))
+            .catch(err => reject(err))
     });
+}
+const fetchDirectories = async (directory_id, base_url) => {
+    return new Promise(async (resolve, reject) => {
+        const directory = await getDirectoryLeanById(directory_id);
+        if (directory == null) return reject(null)
+        if (!isEmpty(base_url)
+            && directory.displays != null
+            && directory.displays.length > 0) {
+            await changeDisplayIDsToFile(directory.displays, base_url)
+                .then(file_arr => directory.displays = file_arr);
+        }
+        const sectionLength = directory.sections ? directory.sections.length : 0;
+        if (sectionLength > 0) {
+            const savedSections = [];
+            for (let i = 0; i < sectionLength; i++) {
+                await fetchDirectories(directory.sections[i], base_url)
+                    .then(section => savedSections.push(section))
+                    .catch(err => console.log(` [error fetching section] ${err}`));
+            }
+            directory.sections = savedSections;
+        }
+        resolve(directory);
+    });
+}
+const getDirectoryLeanById = async (directory_id) => {
+    return new Promise(async (resolve, reject) => {
+        await Directory.findById(directory_id).lean()
+            .then(async directory => {
+                resolve(directory)
+            })
+            .catch(err => {
+                console.log(` [error fetching dir id${directory_id}] ${err}`);
+                reject(err)
+            })
+    })
 }
 const createDirectories = async (directory) => {
     delete directory["_id"];
@@ -74,46 +86,49 @@ const createDirectories = async (directory) => {
         });
     });
 }
-const updateDirectories = async (directory) => {
+const parseDirectoryToDirectories = async (directory) => {
+    let container = [directory];
     const sectionLength = directory.sections.length;
+    let sectionsIDs;
     if (sectionLength > 0) {
-        const sectionsID = [];
+        sectionsIDs = [];
         for (let i = 0; i < sectionLength; i++) {
-            const id = await updateDirectories(directory.sections[i]);
-            sectionsID.push(id.toString());
+            const tempArr = await parseDirectoryToDirectories(directory.sections[i]);
+            container = container.concat(tempArr[1]);
+            sectionsIDs.push(tempArr[0]._id);
         }
-        directory.sections = sectionsID;
+        directory.sections = sectionsIDs;
     }
+    let thisID = ""
+    try {
+        thisID = mongoose.Types.ObjectId(directory._id);
+    } catch (err) {
+        thisID = await saveDirectory(directory)
+    }
+    directory._id = thisID;
+    return [directory, container];
+}
+const saveDirectory = async (dir_obj) => {
     return new Promise((resolve, reject) => {
-        try {
-            let objID = mongoose.Types.ObjectId(directory._id);
-            Directory.findByIdAndUpdate(objID, directory, (err, obj) => {
-                if (err) {
-                    console.log(` [error] ${err}`);
-                    const errMessage = process.env.NODE_ENV == "development" ?
-                        err : "saving directory failed";
-                    reject(errMessage);
-                } else {
-                    console.log("\nSaved Dir", obj, "\n");
-                    resolve(obj._id);
-                }
-            })
-        } catch (err) {
-            console.log(` [cast error] ${err}`);
-            delete directory["_id"];
-            new Directory(directory).save((err, obj) => {
-                if (err) {
-                    console.log(` [error] ${err}`);
-                    const errMessage = process.env.NODE_ENV == "development" ?
-                        err : "saving directory failed";
-                    reject(errMessage);
-                } else {
-                    console.log("\nSaved Dir", obj, "\n");
-                    resolve(obj._id);
-                }
-            });
-        }
-    });
+        delete dir_obj["_id"];
+        new Directory(dir_obj).save((err, obj) => {
+            if (err) {
+                console.log(` [error] saving`);
+                console.log(` [error parse dir ${obj}] ${err}`);
+                reject(err);
+            } else {
+                // console.log("\nSaved Dir", obj, "\n");
+                resolve(obj._id);
+            }
+        });
+    })
+}
+const updateDirectories = directories => {
+    directories.forEach(dir => {
+        Directory.findByIdAndUpdate(dir._id, dir, (err, doc) => {
+            if (err) console.log(` [error updating dir ${dir._id}] ${err}`);
+        })
+    })
 }
 const getDirectoriesID = dir_obj => {
     let directoriesID = [dir_obj._id.toString()];
@@ -127,8 +142,8 @@ const getDirectoriesID = dir_obj => {
 }
 const DeleteDirectoriesByID = async dir_id => {
     return new Promise(async (resolve, reject) => {
-        const dir_obj = await fetchDirectories(dir_id, "");
-        await DeleteDirectories(getDirectoriesID(dir_obj));
+        const ids_arr = getDirectoriesID(await fetchDirectories(dir_id, ""));
+        await DeleteDirectories(dir_obj);
         resolve(true);
     });
 }
@@ -153,6 +168,9 @@ const filterAndDeleteDirectories = async dir_obj => {
     });
     DeleteDirectories(filtered_ids);
 }
+const isEmpty = (str) => {
+    return (!str || 0 === str.length);
+}
 
 module.exports = {
     fetchDirectories,
@@ -160,5 +178,6 @@ module.exports = {
     updateDirectories,
     DeleteDirectoriesByID,
     filterAndDeleteDirectories,
-    changeDisplayIDsToFile
+    changeDisplayIDsToFile,
+    parseDirectoryToDirectories
 };

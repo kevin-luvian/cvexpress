@@ -1,28 +1,27 @@
-import React, { Component } from "react";
+import DateFnsUtils from "@date-io/date-fns";
 import {
-    TextField,
     Checkbox,
+    FormControl,
     InputLabel,
     MenuItem,
-    FormControl,
-    Select
+    Select,
+    TextField
 } from "@material-ui/core";
 import {
     AddToPhotos,
-    HighlightOff,
     CheckBox,
-    CheckBoxOutlineBlank
+    CheckBoxOutlineBlank,
+    HighlightOff
 } from "@material-ui/icons";
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import {
+    KeyboardDatePicker, MuiPickersUtilsProvider
+} from "@material-ui/pickers";
+import React, { Component } from "react";
+import Carousel from 'react-material-ui-carousel';
 import { randId, toMb } from "../../../service/utils";
 import stylesPrimary from "./directory.module.scss";
 import styles from "./editform.module.scss";
-import ImageCarousel from "../../carousel/ImageCarousel";
-import {
-    MuiPickersUtilsProvider,
-    KeyboardDatePicker,
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
 
 class DirectoryFormEdit extends Component {
     constructor(props) {
@@ -38,7 +37,7 @@ class DirectoryFormEdit extends Component {
             sectionsRef: [],
             sections: []
         };
-    } 
+    }
     componentDidMount = () => {
         if (this.props.directory)
             this.setState(this.getDirectoryObject());
@@ -100,7 +99,7 @@ class DirectoryFormEdit extends Component {
     getDirectoryIndexByID = id => {
         const sections = this.state.sections;
         for (let i = 0; i < sections.length; i++) {
-            if (sections[i]._id == id) return i;
+            if (sections[i]._id === id) return i;
         }
         return -1;
     }
@@ -108,7 +107,7 @@ class DirectoryFormEdit extends Component {
         const sections = this.state.sections;
         const sectionsRef = this.state.sectionsRef;
         for (let i = 0; i < sections.length; i++) {
-            if (sections[i]._id == directory._id) {
+            if (sections[i]._id === directory._id) {
                 sections.splice(i, 1);
                 sectionsRef.splice(i, 1);
                 break;
@@ -116,7 +115,7 @@ class DirectoryFormEdit extends Component {
         }
         this.setState({
             sections: sections,
-            sectionsRef: sections.length == 0 ? [] : sectionsRef
+            sectionsRef: sections.length === 0 ? [] : sectionsRef
         }, this.props.updateMainDir);
     }
     addSectionRef = element => {
@@ -145,7 +144,16 @@ class DirectoryFormEdit extends Component {
                         }
                     </div>
                     <div className="mt-3">
-                        <ImageCarousel displays={this.state.displays} />
+                        <Carousel interval={5000}>
+                            {
+                                this.state.displays.map((display, index) => (
+                                    <img key={index}
+                                        src={display.url}
+                                        alt="an image"
+                                        className={stylesPrimary.centerImage} />
+                                ))
+                            }
+                        </Carousel>
                     </div>
                     <div className={`mt-4 ${styles.inputContainer}`}>
                         <Autocomplete
@@ -184,8 +192,8 @@ class DirectoryFormEdit extends Component {
                             className={styles.input}
                             label="Description"
                             multiline
-                            rows={2}
-                            rowsMax={5}
+                            rows={3}
+                            rowsMax={25}
                             value={this.state.description}
                             onChange={(e) => {
                                 this.setState({ description: e.target.value });

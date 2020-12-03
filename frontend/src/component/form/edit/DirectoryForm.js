@@ -1,30 +1,28 @@
-import React, { Component } from "react";
-import NotificationService from "../../standalone/NotificationService";
+import DateFnsUtils from "@date-io/date-fns";
 import {
-    TextField,
     Checkbox,
+    FormControl,
     InputLabel,
     MenuItem,
-    FormControl,
-    Select
+    Select,
+    TextField
 } from "@material-ui/core";
 import {
     AddToPhotos,
-    HighlightOff,
     CheckBox,
-    CheckBoxOutlineBlank
+    CheckBoxOutlineBlank,
+    HighlightOff
 } from "@material-ui/icons";
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import {
+    KeyboardDatePicker, MuiPickersUtilsProvider
+} from "@material-ui/pickers";
+import React, { Component } from "react";
+import Carousel from 'react-material-ui-carousel';
 import { randId, toMb } from "../../../service/utils";
+import NotificationService from "../../standalone/NotificationService";
 import stylesPrimary from "./directory.module.scss";
 import styles from "./editform.module.scss";
-import ImageCarousel from "../../carousel/ImageCarousel";
-import {
-    MuiPickersUtilsProvider,
-    KeyboardDatePicker,
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
-import axios from "../../../axios/Axios";
 
 class DirectoryForm extends Component {
     constructor(props) {
@@ -117,7 +115,15 @@ class DirectoryForm extends Component {
                         }
                     </div>
                     <div className="mt-3">
-                        <ImageCarousel displays={this.state.displays} />
+                        <Carousel interval={5000}>
+                            {
+                                this.state.displays.map((display, index) => (
+                                    <img key={index}
+                                        src={display.url}
+                                        className={stylesPrimary.centerImage} />
+                                ))
+                            }
+                        </Carousel>
                     </div>
                     <div className={`mt-4 ${styles.inputContainer}`}>
                         <Autocomplete
