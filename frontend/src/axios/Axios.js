@@ -3,7 +3,7 @@ import { store } from "../redux/Store";
 import ClearStoreTempAction from "../redux/actions/ClearStoreTempAction";
 
 const instance = axios.create({
-  baseURL: "http://localhost:9000",
+  baseURL: process.env.CVEXPRESS_API_URL
   // baseURL: "https://mycv.atkev.site",
 });
 
