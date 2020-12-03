@@ -17,7 +17,12 @@ const resumeRouter = require('./routes/resume');
 const messageRouter = require('./routes/message');
 const directoryRouter = require('./routes/directory');
 
-const allowedOrigins = [process.env.CORS_URL, 'https://mycv.atkev.site', 'http://localhost:3000'];
+const allowedOrigins = [
+    process.env.CORS_URL,
+    'https://cvkevin.herokuapp.com',
+    'https://mycv.atkev.site',
+    'http://localhost:3000'
+];
 
 const app = express();
 require("dotenv").config();
