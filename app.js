@@ -58,7 +58,7 @@ app.use('/api/resumes', resumeRouter);
 app.use('/api/skills', skillRouter);
 app.use('/api/messages', messageRouter);
 app.use('/api/directories', directoryRouter);
-// app.use('/*', catchallRouter);
+app.use('/*', catchallRouter);
 
 require("./serverstartup")();
 
