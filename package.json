@@ -3,6 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "start-client": "cd frontend && react-scripts start",
+    "build": "(cd frontend && react-scripts build) && npm build",
+    "test": "cd frontend && react-scripts test",
+    "eject": "cd frontend && react-scripts eject",
     "start": "node ./bin/www"
   },
   "dependencies": {
