@@ -58,7 +58,12 @@ app.use('/api/resumes', resumeRouter);
 app.use('/api/skills', skillRouter);
 app.use('/api/messages', messageRouter);
 app.use('/api/directories', directoryRouter);
-app.use('/*', catchallRouter);
+app.use('/api/*', catchallRouter);
+
+app.use(express.static(path.join(__dirname, "frontend/build")));
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname + "/frontend/build/index.html"));
+});
 
 require("./serverstartup")();
 
